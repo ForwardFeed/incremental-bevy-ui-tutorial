@@ -1,6 +1,11 @@
 # Incremental bevy-ui tutorial (bevy 0.16)
 
-This in an incremental tutorial, where I'll try to explain most of the 
+This in an incremental tutorial, where I'll try to explain most of the things I can about bevy UI
+in an approachable manner.
+Each Increment is here to give a guiding light, to overwhelm the least possible.
+You can also rip off some part of my code, and part ways from there.
+Some increment may not interrest you either.
+Please note it's an experimental methodology.
 
 ## if you've never run any bevy project before.
 
@@ -26,7 +31,7 @@ I had a lot of difficulties picking up bevy UI.
 I hope making so that other people don't have
 the same difficulties as I had.
 
-If you want to contribute to the project, for example pointing a mistake of mine
+If you want to contribute to the project, for example pointing a mistake of mine,
 please do so in issues or a pull request.
 
 
@@ -43,8 +48,12 @@ Repress Escape and it will disappear for the screen.
 And this forever.
 
 
-### Increments-0, 3 Buttons pause menu.
+### Increments-1, 3 Buttons pause menu.
 Spawn a list of 3 buttons:
 - Resume: close the menu.
 - Settings: Will do nothing see in a future increment.
 - Quit: quit the executable.
+
+
+### Increments-2, creating a sub menu for settings
+When clicking on the settings, a new menu appears.
