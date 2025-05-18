@@ -59,4 +59,5 @@ Spawn a list of 3 buttons:
 When clicking on the settings, a new menu appears.
 
 
-### Increments-3, Rebinding keys
+### Increments-3, Some stylization
+- Mouse over changes the border

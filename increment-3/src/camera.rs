@@ -7,8 +7,6 @@ fn setup(mut commands: Commands){
     ));
 }
 
-
-
 pub struct CameraPlugin;
 
 impl Plugin for CameraPlugin{

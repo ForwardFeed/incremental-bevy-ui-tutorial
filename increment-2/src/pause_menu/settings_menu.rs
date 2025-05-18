@@ -45,7 +45,7 @@ pub fn spawn_pause_menu_settings(
 fn spawn_pause_menu_settings_buttons(parent: &mut RelatedSpawner<ChildOf>){
     parent.spawn(pause_menu_button_widget("Keybinds"))
         .observe(|_trigger: Trigger<Pointer<Click>>|{
-            info!("Let's see that functionnality in the next increment.");
+            info!("Let's see that functionnality in a future increment.");
     });
     parent.spawn(pause_menu_button_widget("PlaceHolder"))
         .observe(|_trigger: Trigger<Pointer<Click>>|{
