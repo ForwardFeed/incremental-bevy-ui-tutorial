@@ -8,9 +8,9 @@ mod camera;
 
 /// This function main will:
 /// Spawn a list of 3 buttons
-/// Resume: quit the pause menu
-/// Settings: Will do nothing see in a future increment
-/// Quit: Well, quit the window
+/// Resume: close the menu.
+/// Settings: Will do nothing see in a future increment.
+/// Quit: quit the executable.
 fn main() {
     App::new()
         .add_plugins(

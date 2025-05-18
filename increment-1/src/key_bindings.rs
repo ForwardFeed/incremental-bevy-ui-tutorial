@@ -15,7 +15,6 @@ pub struct KeybindingsPlugins;
 impl Plugin for KeybindingsPlugins{
     fn build(&self, app: &mut App) {
         app
-            // If you forget that, the inputs & actions aren't effectively binded.
             .add_plugins(InputManagerPlugin::<PauseMenuActions>::default())
             .add_systems(Startup, setup);
             
