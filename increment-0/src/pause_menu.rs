@@ -3,22 +3,28 @@ use leafwing_input_manager::prelude::*;
 
 use crate::{actions::PauseMenuActions, state::PauseState};
 
-/// A component tag, Its only purpose is to allow targetting the entity it's attached to
+/// A component tag, Its only purpose is to allow targetting the entity it's attached to by queries
 #[derive(Component)]
 pub struct PauseMenuUITag;
 
+/**
+ * There's a common question about if it's better to spawn or to hide.
+ * Both works it's about if you want to conserve your UI state.
+ * If you hide you can conserve the state the UI was, but at the same time
+ * it's somewhat of an additionnal constraint
+ */
 /// Spawn the root of the menu
 fn spawn_pause_menu(
     mut commands: Commands,
 ){
     commands
         .spawn((
-            // First spawn like a node that will take all the screen.
-            // Its purpose is to center the menu
+            // The root node will be invisible and take all the screen
+            // Its purpose is to center the menu that we will place as children of this node.
             // It is required if you want to place you buttons somewhere precisely on the screen
-            // Although you can play with margins too. But I like a menu that spawn automatically
-            // On the center of my screen.
+            // Although you can play with margins eventually? doesn't feel convenient to me.
             Node {
+                // It looks like CSS but it isn't, just similar.
                 width: Val::Percent(100.),
                 height: Val::Percent(100.),
                 flex_direction: FlexDirection::Column,
@@ -26,7 +32,7 @@ fn spawn_pause_menu(
                 justify_content: JustifyContent::SpaceEvenly,
                 ..Default::default()
             },
-            // Here's the component-tag
+            // Here's the component-tag from earlier
             PauseMenuUITag,
             // This new macro from 0.16 is handy to spawn children
             children![

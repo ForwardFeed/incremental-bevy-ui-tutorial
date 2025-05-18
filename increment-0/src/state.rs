@@ -8,9 +8,6 @@ pub enum PauseState {
     PauseMenu,
 }
 
-/// While this is not essential and could be done in the main.rs.
-/// Separating your code into multiple plugins makes it more understandable
-/// by keeping the logic into a single file.
 pub struct StatesPlugin;
 
 impl Plugin for StatesPlugin{

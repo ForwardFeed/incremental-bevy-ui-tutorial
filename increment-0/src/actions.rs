@@ -1,9 +1,8 @@
 use leafwing_input_manager::prelude::*;
 use bevy::prelude::*;
 
-/// This is needed by leafwing_input
-/// While this isn't essential, I find it great to keep track
-/// of the actions from the user
+/// This will be binded to some user inputs
+/// So you don't have to use the keycode and use actions instead.
 #[derive(Actionlike, PartialEq, Eq, Hash, Clone, Copy, Debug, Reflect)]
 pub enum PauseMenuActions {
     Activate,

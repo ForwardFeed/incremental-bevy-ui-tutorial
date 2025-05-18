@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 
 /// Spawns a camera because withtout a camera
-/// There's nothing that can be visible, even an UI.
+/// there's nothing that can be visible, even an UI.
 fn setup(mut commands: Commands){
     commands.spawn((
         Camera2d::default(),
