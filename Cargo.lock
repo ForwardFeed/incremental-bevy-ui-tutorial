@@ -2449,6 +2449,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "increment-3"
+version = "0.1.0"
+dependencies = [
+ "bevy",
+ "leafwing-input-manager",
+]
+
+[[package]]
 name = "indexmap"
 version = "2.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"

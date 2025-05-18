@@ -3,17 +3,16 @@ use bevy::prelude::*;
 mod state;
 mod actions;
 mod key_bindings;
-// I have split the code into multiple file in a submodule
+
 mod pause_menu{
-    pub mod pause_menu; // handles the cohesive logic in the submodule
-    mod shared_widgets; // Handles the shared code of the submodule (mostly widgets)
-    mod root_menu; // handles the logic and structure inherent of the top level UI
-    mod settings_menu; // handles the logic and structure inherent of the settings sub menu
+    pub mod pause_menu;
+    mod shared_widgets;
+    mod root_menu;
+    mod settings_menu; 
 }
 mod camera;
 
 /// This function main will:
-/// Create a submenu for settings
 fn main() {
     App::new()
         .add_plugins(

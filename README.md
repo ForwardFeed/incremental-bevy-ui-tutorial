@@ -57,3 +57,6 @@ Spawn a list of 3 buttons:
 
 ### Increments-2, creating a sub menu for settings
 When clicking on the settings, a new menu appears.
+
+
+### Increments-3, Rebinding keys
