@@ -1,0 +1,8 @@
+[package]
+name = "increment-1"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+bevy = { version = "0.16.0", features = ["dynamic_linking"] }
+leafwing-input-manager = "0.17.0"
