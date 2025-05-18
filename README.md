@@ -41,3 +41,10 @@ To run them there's two ways.
 Press Escape and have a TextBox centered saying hello world. 
 Repress Escape and it will disappear for the screen.
 And this forever.
+
+
+### Increments-0, 3 Buttons pause menu.
+Spawn a list of 3 buttons:
+- Resume: close the menu.
+- Settings: Will do nothing see in a future increment.
+- Quit: quit the executable.
