@@ -60,4 +60,7 @@ When clicking on the settings, a new menu appears.
 
 
 ### Increments-3, Some stylization
-- Mouse over changes the border
+On the pause menu buttons: 
+- Mouse over / mouse click changes background & border color
+- Added Box Shadows 
+- 
