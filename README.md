@@ -62,5 +62,10 @@ When clicking on the settings, a new menu appears.
 ### Increments-3, Some stylization
 On the pause menu buttons: 
 - Mouse over / mouse click changes background & border color
-- Added Box Shadows 
-- 
+- Added Box Shadows
+
+
+### Increments-4, Keyboard based navigation
+###### Gamepads not implemented as I don't have a gamepad, but it would be great if someone could improve that part.
+- Navigate the menu using WASD and activate with Enter
+

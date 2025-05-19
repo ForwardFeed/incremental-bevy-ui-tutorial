@@ -13,9 +13,7 @@ mod pause_menu{
 mod camera;
 
 /// This function main will:
-/// On the pause menu buttons: 
-/// Mouse over / mouse click changes background & border color
-/// Added Box Shadows
+/// Allow to nagivate through the pause menu using WASD and Enter keys.
 fn main() {
     App::new()
         .add_plugins(
