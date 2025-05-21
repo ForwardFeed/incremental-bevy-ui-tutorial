@@ -1,9 +1,9 @@
 use bevy::prelude::*;
 use leafwing_input_manager::prelude::*;
 
-use crate::{actions::PauseMenuActions, state::PauseState};
+use crate::{actions::PauseMenuActions, directional::navigation, state::PauseState};
 
-use super::{root_menu::{spawn_pause_menu, PauseMenuUITag}, settings_menu::{spawn_pause_menu_settings, PauseMenuSettingsUITag}, shared_widgets::pause_button_system};
+use super::{root_menu::{spawn_pause_menu, PauseMenuUITag, RootButtons}, settings_menu::{spawn_pause_menu_settings, PauseMenuSettingsUITag}, shared_widgets::pause_button_system};
 
 
 pub fn despawn<T: Component>(to_despawn: Query<Entity, With<T>>, mut commands: Commands) {
@@ -35,6 +35,9 @@ impl Plugin for PauseMenuPlugin{
 
         app
             .add_systems(Update, controls)
+            // Handles the keyboard input actions
+            .add_systems(Update, navigation::<RootButtons>
+                .run_if(in_state(PauseState::PauseMenu)))
 
             .add_systems(Update, pause_button_system)
 

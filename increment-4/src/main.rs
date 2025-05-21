@@ -1,5 +1,4 @@
 use bevy::prelude::*;
-
 mod state;
 mod actions;
 mod key_bindings;
@@ -7,18 +6,19 @@ mod key_bindings;
 mod pause_menu{
     pub mod pause_menu;
     mod shared_widgets;
-    mod root_menu;
+    pub mod root_menu;
     mod settings_menu; 
 }
 mod camera;
+mod directional;
 
 /// This function main will:
-/// Allow to nagivate through the pause menu using WASD and Enter keys.
+/// Allow to nagivate through the pause menu using WASD, Enter, and Return keys.
 fn main() {
     App::new()
         .add_plugins(
             (   
-                DefaultPlugins, 
+                DefaultPlugins,
                 state::StatesPlugin,
                 key_bindings::KeybindingsPlugins,
                 pause_menu::pause_menu::PauseMenuPlugin,

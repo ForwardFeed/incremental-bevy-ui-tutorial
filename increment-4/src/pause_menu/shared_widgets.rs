@@ -1,5 +1,6 @@
 use bevy::prelude::*;
 
+
 // It's import to tag our button we want to stylize
 // In order not to modify all the button of our app
 #[derive(Component)]
@@ -8,7 +9,7 @@ pub struct MenuButtonTag;
 const COLOR_NORMAL: Color = Color::srgb(0.15, 0.15, 0.15);
 const COLOR_SHADOW: Color = Color::srgb(0.08, 0.08, 0.08);
 
-pub fn pause_menu_button_widget<T: Into<String>>(inner_text: T) -> impl Bundle{
+pub fn pause_menu_button_widget<T: Into<String>>(inner_text: T, compotag: impl Component) -> impl Bundle{
     (
         Node {
             width: Val::Percent(100.),
@@ -32,6 +33,7 @@ pub fn pause_menu_button_widget<T: Into<String>>(inner_text: T) -> impl Bundle{
         BorderRadius::MAX,
         Button,
         MenuButtonTag,
+        compotag,
         children![
             (
                 Text(inner_text.into()),
