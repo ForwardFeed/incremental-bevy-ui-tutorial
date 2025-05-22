@@ -1,16 +1,15 @@
 use bevy::prelude::*;
 
-// It's import to tag our button we want to stylize
-// In order not to modify all the button of our app
 #[derive(Component)]
-pub struct MenuButtonTag;
+struct MenuButtonTag;
+
 
 const COLOR_NORMAL:  Color = Color::srgb(0.15, 0.15, 0.15);
 const COLOR_SHADOW:  Color = Color::srgb(0.08, 0.08, 0.08);
 const COLOR_OVER:    Color = Color::srgb(0.25, 0.25, 0.25);
 const COLOR_PRESSED: Color = Color::srgb(0.35, 0.75, 0.35);
 
-pub fn pause_menu_button_widget<T: Into<String>>(inner_text: T, tag: impl Component) -> impl Bundle{
+pub fn pause_menu_button_widget<T: Into<String>>(inner_text: T) -> impl Bundle{
     (
         Node {
             width: Val::Percent(100.),
@@ -34,7 +33,6 @@ pub fn pause_menu_button_widget<T: Into<String>>(inner_text: T, tag: impl Compon
         BorderRadius::MAX,
         Button,
         MenuButtonTag,
-        tag,
         children![
             (
                 Text(inner_text.into()),
@@ -45,63 +43,29 @@ pub fn pause_menu_button_widget<T: Into<String>>(inner_text: T, tag: impl Compon
     )
 }
 
-/* pub fn pause_button_system(
-    mut interaction_query: Query<
-        (
-            &Interaction,
-            &mut BackgroundColor,
-            &mut BorderColor,
-            &mut BorderRadius
-        ),
-        (Changed<Interaction>, With<MenuButtonTag>),
-    >,
-) {
-    for (interaction, mut color, mut border_color, mut border_radius) in &mut interaction_query {
-        match *interaction {
-            Interaction::Pressed => {
-                /* *color = Color::srgb(0.35, 0.75, 0.35).into();
-                border_color.0 = Color::srgb(0.45, 0.45, 0.45); */
-            }
-            Interaction::Hovered => {
-                *color = Color::srgb(0.25, 0.25, 0.25).into();
-                *border_radius = BorderRadius{
-                    top_left: Val::Px(0.),
-                    top_right: Val::Px(f32::MAX),
-                    bottom_left: Val::Px(f32::MAX),
-                    bottom_right: Val::Px(0.),
-                };
-                border_color.0 = Color::WHITE;
-            }
-            Interaction::None => {
-                *color = COLOR_NORMAL.into();
-                *border_radius = BorderRadius::MAX;
-                border_color.0 = Color::BLACK;
-            }
-        }
-    }
-}
- */
 
-pub fn hover_observer(trigger: Trigger<Pointer<Over>>, horrors_beyond_human_comprehension: Query<(Entity, &mut BackgroundColor), With<MenuButtonTag>>){
-    for (horrors, mut color) in horrors_beyond_human_comprehension{
-        if trigger.target == horrors{
+pub fn hover_observer(trigger: Trigger<Pointer<Over>>, q_menu_buttons: Query<(Entity, &mut BackgroundColor), With<MenuButtonTag>>){
+    // Iterate all Button tag
+    for (entity, mut color) in q_menu_buttons{
+        // If the entity is the one that triggered the click event
+        if trigger.target == entity{
+            // this modifies the color
             *color = COLOR_OVER.into();
         }  
     }
 }
 
-
-pub fn out_observer(trigger: Trigger<Pointer<Out>>, horrors_beyond_human_comprehension: Query<(Entity, &mut BackgroundColor), With<MenuButtonTag>>){
-    for (horrors, mut color) in horrors_beyond_human_comprehension{
-        if trigger.target == horrors{
+pub fn out_observer(trigger: Trigger<Pointer<Out>>, q_menu_buttons: Query<(Entity, &mut BackgroundColor), With<MenuButtonTag>>){
+    for (entity, mut color) in q_menu_buttons{
+        if trigger.target == entity{
             *color = COLOR_NORMAL.into();
         }  
     }
 }
 
-pub fn pressed_observer(trigger: Trigger<Pointer<Pressed>>, horrors_beyond_human_comprehension: Query<(Entity, &mut BackgroundColor), With<MenuButtonTag>>){
-    for (horrors, mut color) in horrors_beyond_human_comprehension{
-        if trigger.target == horrors{
+pub fn pressed_observer(trigger: Trigger<Pointer<Pressed>>, q_menu_buttons: Query<(Entity, &mut BackgroundColor), With<MenuButtonTag>>){
+    for (entity, mut color) in q_menu_buttons{
+        if trigger.target == entity{
             *color = COLOR_PRESSED.into();
         }  
     }
