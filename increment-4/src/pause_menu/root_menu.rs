@@ -68,7 +68,7 @@ fn spawn_pause_menu_root_buttons(parent: &mut RelatedSpawner<ChildOf>){
         .observe(out_observer)
         .observe(pressed_observer);
     parent.spawn(pause_menu_button_widget("Settings" ,RootButtons::Settings))
-        .observe(|_trigger: Trigger<Pointer<Click>>, mut next_state: ResMut<NextState<PauseState>>|{
+        .observe(|_trigger: Trigger<Pointer<Released>>, mut next_state: ResMut<NextState<PauseState>>|{
             next_state.set(PauseState::PauseMenuSettings)
         })
         .observe(hover_observer)  
@@ -76,7 +76,7 @@ fn spawn_pause_menu_root_buttons(parent: &mut RelatedSpawner<ChildOf>){
         .observe(pressed_observer);
 
     parent.spawn(pause_menu_button_widget("Quit", RootButtons::Quit))
-        .observe(|_trigger: Trigger<Pointer<Click>>, mut exit: EventWriter<AppExit>|{
+        .observe(|_trigger: Trigger<Pointer<Released>>, mut exit: EventWriter<AppExit>|{
             exit.write(AppExit::Success);
         })
         .observe(hover_observer)  

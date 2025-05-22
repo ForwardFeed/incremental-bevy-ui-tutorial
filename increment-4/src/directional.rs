@@ -1,9 +1,13 @@
-use std::{fmt::Debug, time::Duration};
+use std::fmt::Debug;
 
-use bevy::{input_focus::InputFocus, math::{CompassQuadrant, FloatOrd}, picking::{backend::HitData, pointer::{Location, PointerId}}, prelude::*, render::camera::NormalizedRenderTarget};
+use bevy::{
+    math::{
+        CompassQuadrant,
+    }, prelude::*, 
+};
 use leafwing_input_manager::prelude::ActionState;
 
-use crate::actions::GeneralActions;
+use crate::{actions::GeneralActions, fake_input::{send_fake_mouse_out, send_fake_mouse_over, send_fake_mouse_press, send_fake_mouse_release}};
 
 #[derive(Debug, Clone, Copy)]
 pub struct Directions{
@@ -52,8 +56,8 @@ impl Directions{
 
 #[derive(Component)]
 pub struct DirectionalNavigator<A: Component>{
-    target_id: usize, //must be split
-    
+    target_id: usize,
+    init: bool,
     rows: Vec<Vec<(A, Directions)>>
 }
 
@@ -67,7 +71,7 @@ impl<A: Component + Clone> DirectionalNavigator<A>{
             acc.push(row);
             acc
         });
-        DirectionalNavigator { target_id: 0, rows}
+        DirectionalNavigator { target_id: 0, rows, init: false}
     }
 
     fn find(&self) -> std::result::Result<(A, Directions, usize, usize, usize, usize), ()> {
@@ -112,15 +116,13 @@ impl<A: Component + Clone> DirectionalNavigator<A>{
         }
         id
     }
-    fn navigate(&mut self, direction: CompassQuadrant) -> bool {
-        let (_comp, dir, n_row, n_max_row, n_col, n_max_col) = match self.find(){
+    fn navigate(&mut self, direction: CompassQuadrant) -> Result<Result<(A, A), A>, ()> {
+        let (comp, dir, n_row, n_max_row, n_col, n_max_col) = match self.find(){
             Ok(x) => {
                 x
             },
             Err(_) => {
-                error!("The navigation went out of bounds, please fix it, reseting to 0");
-                self.target_id = 0;
-                return false;
+                return Err(());
             },
         };
         
@@ -128,9 +130,12 @@ impl<A: Component + Clone> DirectionalNavigator<A>{
             ($dir:ident, $row:expr, $col:expr) => {
                 if dir.$dir{
                     self.target_id = self.find_id($row, $col);
-                    true
+                    match self.find(){
+                        Ok(x)=>Ok(Ok((x.0, comp))),
+                        Err(_)=>Err(())
+                    }
                 } else {
-                    false
+                    Ok(Err(comp))
                 }
             };
         }
@@ -160,8 +165,28 @@ pub fn navigation<T: Component + Debug + Clone + PartialEq>(
     mut navigator: Single<&mut DirectionalNavigator<T>>,
     query_targets: Query<(Entity, &T)>,
     mut commands: Commands,
-    mut input_focus: ResMut<InputFocus>
 ){
+    macro_rules! find_entity_and_do {
+        ($target:expr, $func:expr) => {
+            for (entity, target_comp) in query_targets{
+                if *target_comp == $target{
+                    $func(entity, &mut commands);
+                    break
+                }
+            }
+        };
+    }
+    if !navigator.init{
+        match navigator.find() {
+            Ok(x) => {
+                find_entity_and_do!(x.0, send_fake_mouse_over)
+            },
+            Err(_) => {
+                panic!("The navigator failed to initialize");
+            },
+        }
+        navigator.init = true
+    }
     // If the user is pressing both left and right, or up and down,
     // it should not move in either direction.
     let net_east_west = pause_actions
@@ -173,11 +198,6 @@ pub fn navigation<T: Component + Debug + Clone + PartialEq>(
         .just_pressed(&GeneralActions::MoveUp) as i8
         - pause_actions
         .just_pressed(&GeneralActions::MoveDown) as i8;
-    
-    let net_accept_deny = pause_actions
-        .just_pressed(&GeneralActions::Accept) as i8
-        - pause_actions
-        .just_pressed(&GeneralActions::Deny) as i8;
     
     // Compute the direction that the user is trying to navigate in
     // I'll use a CompassOctan later.
@@ -193,155 +213,51 @@ pub fn navigation<T: Component + Debug + Clone + PartialEq>(
         (-1, 1) => Some(CompassQuadrant::West), // would be nord west
         _ => None,
     };
-    let older_target = match navigator.find(){
-        Ok(x) => x.0,
-        Err(_) => {
-            error!("The navigation went out of bounds, please fix it, reseting to 0");
-            navigator.target_id = 0;
-            return;
-        },
-    };
-    match maybe_direction {
+    let (current, old) = match maybe_direction {
         Some(direction) =>{ 
-            if navigator.navigate(direction){
-                let target = match navigator.find() {
-                    Ok(x) => x.0,
-                    Err(_) => {
-                        error!("The navigation went out of bounds, please fix it, reseting to 0");
-                        navigator.target_id = 0;
-                        return;
-                    },
-                };
-               
-                for (queried_entity, target_type) in query_targets{
-                    if *target_type == target{
-                        input_focus.set(queried_entity);
-                        send_fake_mouse_hover(queried_entity, &mut commands)
+            match navigator.navigate(direction){
+                Ok(opt_navigation) => {
+                    match opt_navigation {
+                        Ok((current, old)) => {
+                            (current, Some(old))
+                        },
+                        Err(current) => {
+                            (current, None)
+                        },
                     }
-                }
-                for (queried_entity, target_type) in query_targets{
-                    if *target_type == older_target{
-                        input_focus.set(queried_entity);
-                        send_fake_mouse_out(queried_entity, &mut commands)
-                    }
-                }
-                
+                },
+                Err(_) => {
+                    error!("The navigation went out of bounds, please fix it, reseting to 0");
+                    navigator.target_id = 0;
+                    return;
+                },
             }
         },
         None => {
-            
-        },
-    }
-    
-    let target = match navigator.find() {
-        Ok(x) => x.0,
-        Err(_) => {
-            error!("The navigation went out of bounds, please fix it, reseting to 0");
-            navigator.target_id = 0;
-            return;
+            match navigator.find() {
+                Ok(x) => {
+                    (x.0, None)
+                },
+                Err(_) => {
+                    error!("Error in navigation, cannot find current target");
+                    navigator.target_id = 0;
+                    return;
+                },
+            }
         },
     };
 
-    for (queried_entity, target_type) in query_targets{
-        if *target_type == target{
-            match net_accept_deny{
-                1 => {
-                    send_fake_mouse_click(queried_entity, &mut commands)
-                }
-                -1 =>{
-                    //don't know about that one
-                }
-                _=> {}
-            }
-        }
+    if let Some(old) = old{
+        find_entity_and_do!(old, send_fake_mouse_out);
+        find_entity_and_do!(current, send_fake_mouse_over);
     }
-}
-
-fn send_fake_mouse_click(target: Entity, commands: &mut Commands){
-    commands.trigger_targets(Pointer::<Click>{
-        target: target,
-        // We're pretending that we're a mouse
-        pointer_id: PointerId::Mouse,
-        // This field isn't used, so we're just setting it to a placeholder value
-        pointer_location: Location {
-            target: NormalizedRenderTarget::Image(
-                // This requires to add bevy render to the project
-                bevy_render::camera::ImageRenderTarget {
-                    handle: Handle::default(),
-                    scale_factor: FloatOrd(1.0),
-                },
-            ),
-
-            position: Vec2::ZERO,
-        },
-        event: Click {
-            button: PointerButton::Primary,
-            // This field isn't used, so we're just setting it to a placeholder value
-            hit: HitData {
-                camera: Entity::PLACEHOLDER,
-                depth: 0.0,
-                position: None,
-                normal: None,
-            },
-            duration: Duration::from_secs_f32(0.1),
-        },
-    }, target);
-}
-
-fn send_fake_mouse_hover(target: Entity, commands: &mut Commands){
-    commands.trigger_targets(Pointer::<Over>{
-        target: target,
-        // We're pretending that we're a mouse
-        pointer_id: PointerId::Mouse,
-        // This field isn't used, so we're just setting it to a placeholder value
-        pointer_location: Location {
-            target: NormalizedRenderTarget::Image(
-                // This requires to add bevy render to the project
-                bevy_render::camera::ImageRenderTarget {
-                    handle: Handle::default(),
-                    scale_factor: FloatOrd(1.0),
-                },
-            ),
-
-            position: Vec2::ZERO,
-        },
-        event: Over {
-            // This field isn't used, so we're just setting it to a placeholder value
-            hit: HitData {
-                camera: Entity::PLACEHOLDER,
-                depth: 0.0,
-                position: None,
-                normal: None,
-            },
-        },
-    }, target);
-}
-
-fn send_fake_mouse_out(target: Entity, commands: &mut Commands){
-    commands.trigger_targets(Pointer::<Out>{
-        target: target,
-        // We're pretending that we're a mouse
-        pointer_id: PointerId::Mouse,
-        // This field isn't used, so we're just setting it to a placeholder value
-        pointer_location: Location {
-            target: NormalizedRenderTarget::Image(
-                // This requires to add bevy render to the project
-                bevy_render::camera::ImageRenderTarget {
-                    handle: Handle::default(),
-                    scale_factor: FloatOrd(1.0),
-                },
-            ),
-
-            position: Vec2::ZERO,
-        },
-        event: Out {
-            // This field isn't used, so we're just setting it to a placeholder value
-            hit: HitData {
-                camera: Entity::PLACEHOLDER,
-                depth: 0.0,
-                position: None,
-                normal: None,
-            },
-        },
-    }, target);
+    
+    if pause_actions.just_pressed(&GeneralActions::Accept){
+        find_entity_and_do!(current, send_fake_mouse_press);
+    }
+    
+    if pause_actions.just_released(&GeneralActions::Accept){
+        find_entity_and_do!(current, send_fake_mouse_release);
+    }
+    
 }
