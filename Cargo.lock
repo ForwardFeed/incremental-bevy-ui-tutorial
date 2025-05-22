@@ -2461,6 +2461,7 @@ name = "increment-4"
 version = "0.1.0"
 dependencies = [
  "bevy",
+ "bevy_render",
  "leafwing-input-manager",
 ]
 
