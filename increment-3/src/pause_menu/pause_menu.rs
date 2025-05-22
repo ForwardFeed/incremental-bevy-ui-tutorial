@@ -3,7 +3,7 @@ use leafwing_input_manager::prelude::*;
 
 use crate::{actions::PauseMenuActions, state::PauseState};
 
-use super::{root_menu::{spawn_pause_menu, PauseMenuUITag}, settings_menu::{spawn_pause_menu_settings, PauseMenuSettingsUITag}, shared_widgets::pause_button_system};
+use super::{root_menu::{spawn_pause_menu, PauseMenuUITag}, settings_menu::{spawn_pause_menu_settings, PauseMenuSettingsUITag}};
 
 
 pub fn despawn<T: Component>(to_despawn: Query<Entity, With<T>>, mut commands: Commands) {
@@ -35,8 +35,6 @@ impl Plugin for PauseMenuPlugin{
 
         app
             .add_systems(Update, controls)
-
-            .add_systems(Update, pause_button_system)
 
             .add_systems(OnEnter(PauseState::PauseMenu), spawn_pause_menu)
             .add_systems(OnExit(PauseState::PauseMenu), despawn::<PauseMenuUITag>)

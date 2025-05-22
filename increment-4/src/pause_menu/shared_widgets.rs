@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 
 #[derive(Component)]
-struct MenuButtonTag;
+pub struct MenuButtonTag;
 
 
 const COLOR_NORMAL:  Color = Color::srgb(0.15, 0.15, 0.15);
@@ -9,7 +9,7 @@ const COLOR_SHADOW:  Color = Color::srgb(0.08, 0.08, 0.08);
 const COLOR_OVER:    Color = Color::srgb(0.25, 0.25, 0.25);
 const COLOR_PRESSED: Color = Color::srgb(0.35, 0.75, 0.35);
 
-pub fn pause_menu_button_widget<T: Into<String>>(inner_text: T) -> impl Bundle{
+pub fn pause_menu_button_widget<T: Into<String>>(inner_text: T, tag: impl Component) -> impl Bundle{
     (
         Node {
             width: Val::Percent(100.),
@@ -33,6 +33,9 @@ pub fn pause_menu_button_widget<T: Into<String>>(inner_text: T) -> impl Bundle{
         BorderRadius::MAX,
         Button,
         MenuButtonTag,
+        // Adding a tag to find the button back
+        //
+        tag, 
         children![
             (
                 Text(inner_text.into()),
@@ -45,11 +48,8 @@ pub fn pause_menu_button_widget<T: Into<String>>(inner_text: T) -> impl Bundle{
 
 
 pub fn hover_observer(trigger: Trigger<Pointer<Over>>, q_menu_buttons: Query<(Entity, &mut BackgroundColor), With<MenuButtonTag>>){
-    // Iterate all Button tag
     for (entity, mut color) in q_menu_buttons{
-        // If the entity is the one that triggered the click event
         if trigger.target == entity{
-            // this modifies the color
             *color = COLOR_OVER.into();
         }  
     }

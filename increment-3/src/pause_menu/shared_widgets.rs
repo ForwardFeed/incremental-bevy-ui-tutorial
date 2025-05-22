@@ -3,7 +3,7 @@ use bevy::prelude::*;
 // It's import to tag our button we want to stylize
 // In order not to modify all the button of our app
 #[derive(Component)]
-struct MenuButtonTag;
+pub struct MenuButtonTag;
 
 
 const COLOR_NORMAL:  Color = Color::srgb(0.15, 0.15, 0.15);
@@ -83,10 +83,6 @@ pub fn pressed_observer(trigger: Trigger<Pointer<Pressed>>, q_menu_buttons: Quer
         }  
     }
 }
-
-
-
-
 
 
 // BEHOLD, UNUSED CODE

@@ -2,7 +2,7 @@ use bevy::{ecs::{relationship::RelatedSpawner, spawn::SpawnWith}, prelude::*};
 
 use crate::state::PauseState;
 
-use super::shared_widgets::pause_menu_button_widget;
+use super::shared_widgets::{hover_observer, out_observer, pause_menu_button_widget, pressed_observer};
 
 
 #[derive(Component)]
@@ -40,15 +40,27 @@ pub fn spawn_pause_menu(
 
 fn spawn_pause_menu_root_buttons(parent: &mut RelatedSpawner<ChildOf>){
     parent.spawn(pause_menu_button_widget("Resume"))
-        .observe(|_trigger: Trigger<Pointer<Click>>, mut next_state: ResMut<NextState<PauseState>>|{
-            next_state.set(PauseState::Game)
-    });
-    parent.spawn(pause_menu_button_widget("Settings"))
-        .observe(|_trigger: Trigger<Pointer<Click>>, mut next_state: ResMut<NextState<PauseState>>|{
-            next_state.set(PauseState::PauseMenuSettings)
-    });
-    parent.spawn(pause_menu_button_widget("Quit"))
-        .observe(|_trigger: Trigger<Pointer<Click>>, mut exit: EventWriter<AppExit>|{
-            exit.write(AppExit::Success);
-    });
+    .observe(|_trigger: Trigger<Pointer<Released>>, mut next_state: ResMut<NextState<PauseState>>|{
+        next_state.set(PauseState::Game)
+    })
+    // Adding all observers manually
+    // Maybe I'll find a better API for that in the future
+    .observe(hover_observer)  
+    .observe(out_observer)
+    .observe(pressed_observer);
+parent.spawn(pause_menu_button_widget("Settings" ))
+    .observe(|_trigger: Trigger<Pointer<Released>>, mut next_state: ResMut<NextState<PauseState>>|{
+        next_state.set(PauseState::PauseMenuSettings)
+    })
+    .observe(hover_observer)  
+    .observe(out_observer)
+    .observe(pressed_observer);
+
+parent.spawn(pause_menu_button_widget("Quit"))
+    .observe(|_trigger: Trigger<Pointer<Released>>, mut exit: EventWriter<AppExit>|{
+        exit.write(AppExit::Success);
+    })
+    .observe(hover_observer)  
+    .observe(out_observer)
+    .observe(pressed_observer);
 }
