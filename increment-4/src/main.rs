@@ -6,8 +6,9 @@ mod key_bindings;
 mod pause_menu{
     pub mod pause_menu;
     mod shared_widgets;
-    pub mod root_menu;
+    mod root_menu;
     mod settings_menu; 
+    mod fun_grids;
 }
 mod camera;
 mod directional;

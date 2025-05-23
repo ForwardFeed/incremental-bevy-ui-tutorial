@@ -2,7 +2,7 @@ use bevy::{ecs::{relationship::RelatedSpawner, spawn::SpawnWith}, prelude::*};
 
 use crate::{directional::DirectionalNavigator, dirq, state::PauseState};
 
-use super::shared_widgets::{hover_observer, out_observer, pause_menu_button_widget, pressed_observer};
+use super::{shared_widgets::{hover_observer, out_observer, pause_menu_button_widget, pressed_observer}};
 
 
 #[derive(Component, Debug, Clone, Copy, PartialEq)]
@@ -69,9 +69,9 @@ fn spawn_pause_menu_settings_buttons(parent: &mut RelatedSpawner<ChildOf>){
         .observe(hover_observer)  
         .observe(out_observer)
         .observe(pressed_observer);
-    parent.spawn(pause_menu_button_widget("PlaceHolder", SettingsButtons::PlaceHolder))
-        .observe(|_trigger: Trigger<Pointer<Released>>|{
-            info!("I haven't set anything about that yet, but who knows, I may need it.");
+    parent.spawn(pause_menu_button_widget("Fun Grid", SettingsButtons::PlaceHolder))
+        .observe(|_trigger: Trigger<Pointer<Released>>, mut next_state: ResMut<NextState<PauseState>> |{
+            next_state.set(PauseState::PauseMenuFunGrid);
         })
         .observe(hover_observer)  
         .observe(out_observer)

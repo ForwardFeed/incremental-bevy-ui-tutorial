@@ -61,7 +61,7 @@ pub struct DirectionalNavigator<A: Component>{
     rows: Vec<Vec<(A, Directions)>>
 }
 
-impl<A: Component + Clone> DirectionalNavigator<A>{
+impl<A: Component + Clone + PartialEq> DirectionalNavigator<A>{
     pub fn new<I: IntoIterator<Item = (A, Directions)>>(direction_navigator: impl IntoIterator<Item = I>) -> Self{
         let rows = direction_navigator.into_iter().fold(vec![], |mut acc, item|{
             let row = item.into_iter().fold(vec![], |mut acc, item|{
@@ -81,18 +81,20 @@ impl<A: Component + Clone> DirectionalNavigator<A>{
         for (_row_id, row) in self.rows.iter().enumerate(){
             // small optimisation
             if row.len() - 1 > offset{
-                offset -= row.len() - 1;
-            } else {
-                let mut n_col = 0;
-                for (block_id, block) in row.iter().enumerate(){
-                    if block_id == offset{
-                        let block_clone = (*block).clone();
-                        let n_max_col = row.len();
-                        return Ok((block_clone.0, block_clone.1, n_row, n_max_row, n_col, n_max_col).clone());
-                    }
-                    offset -= 1;
-                    n_col += 1;
+                offset += row.len() - 1;
+                continue;
+            } 
+            let mut n_col = 0;
+            
+            for (block_id, block) in row.iter().enumerate(){
+                if block_id == offset{
+                    let block_clone = (*block).clone();
+                    let n_max_col = row.len();
+                    info!("{n_col}, {offset}");
+                    return Ok((block_clone.0, block_clone.1, n_row, n_max_row, n_col, n_max_col).clone());
                 }
+                offset -= 1;
+                n_col += 1;
             }
             n_row += 1;
         }
@@ -130,10 +132,19 @@ impl<A: Component + Clone> DirectionalNavigator<A>{
             ($dir:ident, $row:expr, $col:expr) => {
                 if dir.$dir{
                     self.target_id = self.find_id($row, $col);
-                    match self.find(){
-                        Ok(x)=>Ok(Ok((x.0, comp))),
-                        Err(_)=>Err(())
+                    for _i in $col..n_max_col{
+                        match self.find(){
+                            Ok(x)=>{
+                                if (x.0 != comp){
+                                    return Ok(Ok((x.0, comp)))
+                                }
+                            },
+                            Err(_)=>{
+                                return Err(())
+                            }
+                        }
                     }
+                    return Err(())
                 } else {
                     Ok(Err(comp))
                 }
@@ -150,7 +161,6 @@ impl<A: Component + Clone> DirectionalNavigator<A>{
             CompassQuadrant::East => {
                 target!(east, n_row , if n_col == n_max_col { 0 } else { n_col + 1})
             },
-           
             CompassQuadrant::West => {
                 target!(west, n_row , if n_col == 0 { n_max_col } else { n_col - 1})
             },

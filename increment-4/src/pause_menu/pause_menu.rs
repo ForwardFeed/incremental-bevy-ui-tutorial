@@ -3,7 +3,7 @@ use leafwing_input_manager::prelude::*;
 
 use crate::{actions::PauseMenuActions, directional::navigation, state::PauseState};
 
-use super::{root_menu::{spawn_pause_menu, PauseMenuUITag, RootButtons}, settings_menu::{spawn_pause_menu_settings, PauseMenuSettingsUITag, SettingsButtons}};
+use super::{fun_grids::{spawn_fun_grid, FunGridTag, FunGridTags}, root_menu::{spawn_pause_menu, PauseMenuUITag, RootButtons}, settings_menu::{spawn_pause_menu_settings, PauseMenuSettingsUITag, SettingsButtons}};
 
 
 pub fn despawn<T: Component>(to_despawn: Query<Entity, With<T>>, mut commands: Commands) {
@@ -23,6 +23,7 @@ fn controls(
                 PauseState::Game => next_state.set(PauseState::PauseMenu),
                 PauseState::PauseMenu => next_state.set(PauseState::Game),
                 PauseState::PauseMenuSettings => next_state.set(PauseState::Game),
+                PauseState::PauseMenuFunGrid => next_state.set(PauseState::Game),
             }
         }
     }
@@ -42,12 +43,17 @@ impl Plugin for PauseMenuPlugin{
                 .run_if(in_state(PauseState::PauseMenu)))
             .add_systems(Update, navigation::<SettingsButtons>
                     .run_if(in_state(PauseState::PauseMenuSettings)))
+            .add_systems(Update, navigation::<FunGridTags>
+                .run_if(in_state(PauseState::PauseMenuFunGrid)))
 
             .add_systems(OnEnter(PauseState::PauseMenu), spawn_pause_menu)
             .add_systems(OnExit(PauseState::PauseMenu), despawn::<PauseMenuUITag>)
 
             .add_systems(OnEnter(PauseState::PauseMenuSettings), spawn_pause_menu_settings)
             .add_systems(OnExit(PauseState::PauseMenuSettings), despawn::<PauseMenuSettingsUITag>)
+
+            .add_systems(OnEnter(PauseState::PauseMenuFunGrid), spawn_fun_grid)
+            .add_systems(OnExit(PauseState::PauseMenuFunGrid), despawn::<FunGridTag>)
             
         ;
     }
