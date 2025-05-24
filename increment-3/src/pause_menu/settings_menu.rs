@@ -41,24 +41,34 @@ pub fn spawn_pause_menu_settings(
 
 fn spawn_pause_menu_settings_buttons(parent: &mut RelatedSpawner<ChildOf>){
     parent.spawn(pause_menu_button_widget("Keybinds"))
-        .observe(|_trigger: Trigger<Pointer<Released>>|{
-            info!("Let's see that functionnality in a future increment.");
-        })
+        .observe(onclick_keybinds)
         .observe(hover_observer)  
         .observe(out_observer)
         .observe(pressed_observer);
     parent.spawn(pause_menu_button_widget("PlaceHolder"))
-        .observe(|_trigger: Trigger<Pointer<Released>>|{
-            info!("I haven't set anything about that yet, but who knows, I may need it.");
-        })
+        .observe(onclick_placeholder)
         .observe(hover_observer)  
         .observe(out_observer)
         .observe(pressed_observer);
     parent.spawn(pause_menu_button_widget("Return"))
-        .observe(|_trigger: Trigger<Pointer<Released>>, mut next_state: ResMut<NextState<PauseState>>|{
-            next_state.set(PauseState::PauseMenu);
-        })
+        .observe(onclick_return)
         .observe(hover_observer)  
         .observe(out_observer)
         .observe(pressed_observer);
+}
+
+
+fn onclick_keybinds(_trigger: Trigger<Pointer<Released>>){
+    info!("Let's see that functionnality in a future increment.");
+}
+
+
+fn onclick_placeholder(_trigger: Trigger<Pointer<Released>>){
+    info!("I haven't set anything about that yet, but who knows, I may need it.");
+}
+
+
+
+fn onclick_return(_trigger: Trigger<Pointer<Released>>, mut next_state: ResMut<NextState<PauseState>>){
+    next_state.set(PauseState::PauseMenu);
 }

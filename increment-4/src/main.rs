@@ -13,6 +13,7 @@ mod pause_menu{
 mod camera;
 
 /// This function main will:
+/// Nagivate through the pause menu using WASD, Enter, and Return keys.
 fn main() {
     App::new()
         .add_plugins(

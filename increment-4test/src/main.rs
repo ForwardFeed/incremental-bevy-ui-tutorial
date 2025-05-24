@@ -15,7 +15,6 @@ mod directional;
 mod fake_input;
 
 /// This function main will:
-/// Allow to nagivate through the pause menu using WASD, Enter, and Return keys.
 fn main() {
     App::new()
         .add_plugins(
