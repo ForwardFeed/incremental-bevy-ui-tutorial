@@ -6,6 +6,7 @@ pub enum PauseState {
     Game,
     PauseMenu,
     PauseMenuSettings,
+    PauseMenuFunGrid,
 }
 
 

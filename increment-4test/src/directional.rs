@@ -56,22 +56,34 @@ impl Directions{
 
 #[derive(Component)]
 pub struct DirectionalNavigator<A: Component>{
-    target_id: usize,
+    coords: Vec2,
     init: bool,
-    rows: Vec<Vec<(A, Directions)>>
+    rows: Vec<Vec<(A, Directions, Option<Entity>)>>,
 }
 
 impl<A: Component + Clone + PartialEq> DirectionalNavigator<A>{
     pub fn new<I: IntoIterator<Item = (A, Directions)>>(direction_navigator: impl IntoIterator<Item = I>) -> Self{
         let rows = direction_navigator.into_iter().fold(vec![], |mut acc, item|{
-            let row = item.into_iter().fold(vec![], |mut acc, item|{
-                acc.push(item);
+            let row = item.into_iter().fold(vec![], |mut acc, (comp, dir)|{
+                acc.push((comp, dir, None));
                 acc
             });
             acc.push(row);
             acc
         });
-        DirectionalNavigator { target_id: 0, rows, init: false}
+        DirectionalNavigator { rows, init: false, coords: Vec2::default()}
+    }
+
+    fn init_next_frame(&mut self) -> &mut Self{
+        self.init = false;
+        self
+    }
+
+    fn init(&mut self, q_targets: Query<(Entity, &A)>){
+        self.coords = Vec2(0, 0);
+        for (entity, comp) in q_targets{
+            
+        }
     }
 
     fn find(&self) -> std::result::Result<(A, Directions, usize, usize, usize, usize), ()> {

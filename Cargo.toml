@@ -1,5 +1,5 @@
 [workspace]
-members = ["increment-0", "increment-1", "increment-2", "increment-3", "increment-4"]
+members = ["increment-0", "increment-1", "increment-2", "increment-3", "increment-4test", "increment-4"]
 resolver = "3"
 
 
