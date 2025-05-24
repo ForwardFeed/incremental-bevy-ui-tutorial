@@ -1,4 +1,4 @@
-use bevy::{ecs::{relationship::RelatedSpawner, spawn::SpawnWith}, prelude::*};
+use bevy::{ecs::{relationship::RelatedSpawner, spawn::SpawnWith}, input_focus::{directional_navigation::DirectionalNavigationMap, InputFocus}, math::CompassOctant, prelude::*};
 
 use crate::state::PauseState;
 
@@ -10,6 +10,8 @@ pub struct PauseMenuUITag;
 
 pub fn spawn_pause_menu(
     mut commands: Commands,
+    mut directional_nav_map: ResMut<DirectionalNavigationMap>,
+    mut input_focus: ResMut<InputFocus>
 ){
     commands
         .spawn((
@@ -31,14 +33,19 @@ pub fn spawn_pause_menu(
                         justify_content: JustifyContent::SpaceEvenly,
                         ..Default::default()
                     },
-                    Children::spawn(SpawnWith(spawn_pause_menu_root_buttons))
+                    Children::spawn(SpawnWith(|parent: &mut RelatedSpawner<ChildOf>|{
+                        directional_nav_map.add_edges(&spawn_pause_menu_root_buttons(parent), CompassOctant::South);
+                    }))
                 )
             ]
-        ))
-    ;
+        )
+    );
+
+    // iterate and add edges
+
 }
 
-fn spawn_pause_menu_root_buttons(parent: &mut RelatedSpawner<ChildOf>){
+fn spawn_pause_menu_root_buttons(parent: &mut RelatedSpawner<ChildOf>) -> Vec<Entity>{
     parent.spawn(pause_menu_button_widget("Resume"))
         .observe(onclick_resume)
         .observe(hover_observer)  
@@ -54,6 +61,7 @@ fn spawn_pause_menu_root_buttons(parent: &mut RelatedSpawner<ChildOf>){
         .observe(hover_observer)  
         .observe(out_observer)
         .observe(pressed_observer);
+    return vec![];
 }
 
 

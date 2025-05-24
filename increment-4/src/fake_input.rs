@@ -60,7 +60,7 @@ pub fn send_fake_mouse_press(target: Entity, commands: &mut Commands){
     }, target);
 }
 
-
+#[allow(dead_code)]
 pub fn send_fake_mouse_release(target: Entity, commands: &mut Commands){
     commands.trigger_targets(Pointer::<Released>{
         target: target,
@@ -89,6 +89,7 @@ pub fn send_fake_mouse_release(target: Entity, commands: &mut Commands){
     }, target);
 }
 
+#[allow(dead_code)]
 pub fn send_fake_mouse_over(target: Entity, commands: &mut Commands){
     commands.trigger_targets(Pointer::<Over>{
         target: target,
@@ -116,6 +117,7 @@ pub fn send_fake_mouse_over(target: Entity, commands: &mut Commands){
     }, target);
 }
 
+#[allow(dead_code)]
 pub fn send_fake_mouse_out(target: Entity, commands: &mut Commands){
     commands.trigger_targets(Pointer::<Out>{
         target: target,
