@@ -1,6 +1,6 @@
-use bevy::{ecs::{relationship::RelatedSpawner, spawn::SpawnWith}, input_focus::{directional_navigation::DirectionalNavigationMap, InputFocus}, math::CompassOctant, prelude::*};
+use bevy::{ecs::relationship::RelatedSpawner, prelude::*};
 
-use crate::state::PauseState;
+use crate::{directional::SpawnWithSouthEdges, state::PauseState};
 
 use super::shared_widgets::{hover_observer, out_observer, pause_menu_button_widget, pressed_observer};
 
@@ -10,8 +10,6 @@ pub struct PauseMenuUITag;
 
 pub fn spawn_pause_menu(
     mut commands: Commands,
-    mut directional_nav_map: ResMut<DirectionalNavigationMap>,
-    mut input_focus: ResMut<InputFocus>
 ){
     commands
         .spawn((
@@ -33,37 +31,39 @@ pub fn spawn_pause_menu(
                         justify_content: JustifyContent::SpaceEvenly,
                         ..Default::default()
                     },
-                    Children::spawn(SpawnWith(|parent: &mut RelatedSpawner<ChildOf>|{
-                        directional_nav_map.add_edges(&spawn_pause_menu_root_buttons(parent), CompassOctant::South);
-                    }))
-                )
+                    // I have replaced by a self made SpawnWithSouthEdges
+                    Children::spawn(SpawnWithSouthEdges(spawn_pause_menu_root_buttons))
+                ),
+                
             ]
         )
     );
-
-    // iterate and add edges
-
 }
 
+// returns a Vector of entity
+// needed by the directionnal
 fn spawn_pause_menu_root_buttons(parent: &mut RelatedSpawner<ChildOf>) -> Vec<Entity>{
-    parent.spawn(pause_menu_button_widget("Resume"))
-        .observe(onclick_resume)
-        .observe(hover_observer)  
-        .observe(out_observer)
-        .observe(pressed_observer);
-    parent.spawn(pause_menu_button_widget("Settings" ))
-        .observe(onclick_settings)
-        .observe(hover_observer)  
-        .observe(out_observer)
-        .observe(pressed_observer);
-    parent.spawn(pause_menu_button_widget("Quit"))
-        .observe(onclick_quit)
-        .observe(hover_observer)  
-        .observe(out_observer)
-        .observe(pressed_observer);
-    return vec![];
+    vec![
+        parent.spawn(pause_menu_button_widget("Resume"))
+            .observe(onclick_resume)
+            .observe(hover_observer)  
+            .observe(out_observer)
+            .observe(pressed_observer)
+            .id(),
+        parent.spawn(pause_menu_button_widget("Settings" ))
+            .observe(onclick_settings)
+            .observe(hover_observer)  
+            .observe(out_observer)
+            .observe(pressed_observer)
+            .id(),
+        parent.spawn(pause_menu_button_widget("Quit"))
+            .observe(onclick_quit)
+            .observe(hover_observer)  
+            .observe(out_observer)
+            .observe(pressed_observer)
+            .id(),
+    ]
 }
-
 
 fn onclick_resume(_trigger: Trigger<Pointer<Released>>, mut next_state: ResMut<NextState<PauseState>>){
     next_state.set(PauseState::Game)

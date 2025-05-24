@@ -1,11 +1,12 @@
-use bevy::{input_focus::{directional_navigation::{DirectionalNavigation, DirectionalNavigationPlugin}, InputDispatchPlugin}, math::CompassOctant, prelude::*};
+use bevy::{ecs::{relationship::{RelatedSpawner, Relationship}, spawn::SpawnableList}, input_focus::{directional_navigation::{DirectionalNavigation, DirectionalNavigationMap, DirectionalNavigationPlugin}, InputDispatchPlugin, InputFocus}, math::CompassOctant, prelude::*};
 use leafwing_input_manager::prelude::*;
 
-use crate::{actions::GeneralActions, fake_input::send_fake_mouse_press};
+use crate::{actions::GeneralActions, fake_input::{send_fake_mouse_out, send_fake_mouse_over, send_fake_mouse_press, send_fake_mouse_release}};
 
 fn controls_directions(
     actions: Single<&ActionState<GeneralActions>>,
-    mut directional_navigation: DirectionalNavigation
+    mut directional_navigation: DirectionalNavigation,
+    mut commands: Commands,
 ){
     // If the user is pressing both left and right, or up and down,
     // it should move in neither direction.
@@ -33,17 +34,22 @@ fn controls_directions(
         (-1, 1) => Some(CompassOctant::NorthWest),
         _ => None,
     };
-
+    // Store the previous entity in case the direction moves
+    let old_entity = directional_navigation.focus.0;
     if let Some(direction) = maybe_direction {
         match directional_navigation.navigate(direction) {
             // In a real game, you would likely want to play a sound or show a visual effect
             // on both successful and unsuccessful navigation attempts
-            Ok(_entity) => {
-                
+            Ok(entity) => {
+                // I prefer to center all my reactivity around events
+                // But https://bevyengine.org/examples/ui-user-interface/directional-navigation/
+                // Prefers to use a system dedicated to the focus
+                if let Some(old_entity) = old_entity{
+                    send_fake_mouse_out(old_entity, &mut commands);
+                }
+                send_fake_mouse_over(entity, &mut commands);
             }
-            Err(_e) => {
-
-            },
+            Err(_e) => {},
         }
     }
 }
@@ -67,11 +73,31 @@ fn controls_accept(
 
     if actions.just_released(&GeneralActions::Accept){
         // Faking releasing the mouse primary up
-        send_fake_mouse_press(target, &mut commands);
+        send_fake_mouse_release(target, &mut commands);
     }
 }
 
+pub struct SpawnWithSouthEdges<F>(pub F);
 
+impl<R: Relationship, F: FnOnce(&mut RelatedSpawner<R>)->Vec<Entity> + Send + Sync + 'static> SpawnableList<R>
+    for SpawnWithSouthEdges<F>
+{
+    fn spawn(self, world: &mut World, entity: Entity) {
+        world.resource_scope(|world, mut directional_nav_map: Mut<DirectionalNavigationMap>| {
+            world.resource_scope(|world, mut input_focus: Mut<InputFocus>|{
+                world.entity_mut(entity).with_related_entities(|parent : &mut RelatedSpawner<R> |{
+                    let entities = self.0(parent);
+                    directional_nav_map.add_edges(&entities, CompassOctant::South);
+                    let top_left_entity = *entities.get(0).unwrap();
+                    input_focus.set(top_left_entity);
+                });
+            })
+        });
+    }
+    fn size_hint(&self) -> usize {
+        1
+    }
+}
 
 pub struct DirectionalPlugin;
 

@@ -67,3 +67,4 @@ pub fn pressed_observer(trigger: Trigger<Pointer<Pressed>>, q_menu_buttons: Quer
         }  
     }
 }
+
