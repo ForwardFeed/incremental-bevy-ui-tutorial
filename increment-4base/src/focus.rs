@@ -3,15 +3,14 @@ use bevy::{input_focus::InputFocus, prelude::*};
 #[derive(Debug, Resource, FromWorld)]
 pub struct CurrentFocusEntity(Option<Entity>);
 
-
-
+// Two Custom Events, I hope FocusIn and FocusOut to be in bevy in the future
 #[derive(Copy, Clone, Event)]
 pub struct FocusIn;
 
 #[derive(Copy, Clone, Event)]
 pub struct FocusOut;
 
-
+// This will link the focus event
 fn trigger_focus_events(
     input_focus: Res<InputFocus>,
     mut current_focus: ResMut<CurrentFocusEntity>,
@@ -19,12 +18,15 @@ fn trigger_focus_events(
 ) {
     if let Some(entity) = input_focus.0 {
         if let Some(curr_entity) = current_focus.0{
+            // if the entity is the same don't do anything
             if curr_entity == entity{
                 return;
             }
+            // trigger the old entity saying the focus has moved
             commands.trigger_targets(FocusOut, curr_entity);
         }
         current_focus.0 = Some(entity);
+        // trigger the new entity saying that it has the focus
         commands.trigger_targets(FocusIn, entity);
     }
 }
@@ -36,7 +38,6 @@ impl Plugin for FocusPlugin{
 
         app
             .add_systems(Update, trigger_focus_events)
-            
             .init_resource::<CurrentFocusEntity>()
         ;
     }

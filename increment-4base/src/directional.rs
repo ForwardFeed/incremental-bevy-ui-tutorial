@@ -54,14 +54,13 @@ fn controls_directions(
         match directional_navigation.navigate(direction) {
             // In a real game, you would likely want to play a sound or show a visual effect
             // on both successful and unsuccessful navigation attempts
-            Ok(_entity) => {
-            }
+            Ok(_entity) => {}
             Err(_e) => {},
         }
     }
 }
 
-/// Look if the user pressed enter
+/// Look if the user pressed Enter
 fn controls_accept(
     actions: Single<&ActionState<GeneralActions>>,
     directional_navigation: DirectionalNavigation,
@@ -73,6 +72,9 @@ fn controls_accept(
             return;
         },
     };
+    // By splitting into pressed and release with different behaviors
+    // It gives a better sense of interactibility
+    // But it has some small side visual effects when you pressed and move afterwards.
     if actions.just_pressed(&GeneralActions::Accept){
         // Faking pressing the mouse primary down
         send_fake_mouse_press(target, &mut commands);
@@ -84,29 +86,42 @@ fn controls_accept(
     }
 }
 
+// The reason why this is needed is because
+// in order to use bevy directionnal, you need the entities.
+// But you also need to spawn with the parent.
+// If you don't want to use that, you will to not use any improvement from bevy 0.16
+// If you want other directionnality, you need to make another implementation with another spawnwith.
 pub struct SpawnWithSouthEdges<F>(pub F);
 
 impl<R: Relationship, F: FnOnce(&mut RelatedSpawner<R>)->Vec<Entity> + Send + Sync + 'static> SpawnableList<R>
     for SpawnWithSouthEdges<F>
 {
     fn spawn(self, world: &mut World, entity: Entity) {
+        // Resource scope here allows to borrow mutably multiple things.
         world.resource_scope(|world, mut directional_nav_map: Mut<DirectionalNavigationMap>| {
+            // And yes each resource you need requires you to add another level of identation
             world.resource_scope(|world, mut input_focus: Mut<InputFocus>|{
+                // Allows to spawn something and giving it automatically a relation of parent-child
                 world.entity_mut(entity).with_related_entities(|parent : &mut RelatedSpawner<R> |{
+                    // This is the vector of our buttons entity
                     let entities = self.0(parent);
+                    // If you want to loop, replace by add_looping_edges
                     directional_nav_map.add_edges(&entities, CompassOctant::South);
-                    let top_left_entity = *entities.get(0).unwrap();
-                    input_focus.set(top_left_entity);
+                    if let Some(first_entity) = (*entities).get(0){
+                        // we inform the focus that this is now the new focus.
+                        // Which means spawning forces a new focus since there can be ONLY 1 focus.
+                        input_focus.set(*first_entity);
+                    }
+                    
                 });
             })
         });
     }
+    // I have no clue what that does
     fn size_hint(&self) -> usize {
         1
     }
 }
-
-
 
 pub struct DirectionalPlugin;
 

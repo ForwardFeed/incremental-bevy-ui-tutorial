@@ -1,12 +1,13 @@
 use bevy::prelude::*;
 
-/// A state to keep track to what to run, what not to run
 #[derive(States, Default, Debug, Clone, PartialEq, Eq, Hash)]
 pub enum PauseState {
     #[default]
     Game,
     PauseMenu,
+    PauseMenuSettings,
 }
+
 
 pub struct StatesPlugin;
 
