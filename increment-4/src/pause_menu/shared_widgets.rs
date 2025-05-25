@@ -1,8 +1,9 @@
 use bevy::prelude::*;
 
+use crate::focus::{FocusIn, FocusOut};
+
 #[derive(Component)]
 pub struct MenuButtonTag;
-
 
 const COLOR_NORMAL:  Color = Color::srgb(0.15, 0.15, 0.15);
 const COLOR_SHADOW:  Color = Color::srgb(0.08, 0.08, 0.08);
@@ -66,5 +67,45 @@ pub fn pressed_observer(trigger: Trigger<Pointer<Pressed>>, q_menu_buttons: Quer
             *color = COLOR_PRESSED.into();
         }  
     }
+}
+
+pub fn focus_in_observer(trigger: Trigger<FocusIn>, q_menu_buttons: Query<(Entity, &mut BackgroundColor), With<MenuButtonTag>>){
+    let target = trigger.target();
+    for (entity, mut color) in q_menu_buttons{
+        if target == entity{
+            *color = COLOR_OVER.into();
+        }  
+    }
+}
+
+pub fn focus_out_observer(trigger: Trigger<FocusOut>, q_menu_buttons: Query<(Entity, &mut BackgroundColor), With<MenuButtonTag>>){
+    let target = trigger.target();
+    for (entity, mut color) in q_menu_buttons{
+        if target == entity{
+            *color = COLOR_NORMAL.into();
+        }  
+    }
+}
+
+// I had some fun writing this macro
+// Creates the whole function to generate directionnable buttons
+#[macro_export]
+macro_rules! fn_vertical_row {
+    ($fn_name:ident, [$(($text:tt, $onclick:ident)),*]) => {
+        fn $fn_name(parent: &mut RelatedSpawner<ChildOf>) -> Vec<Entity>{
+            vec![
+                $(
+                    parent.spawn(pause_menu_button_widget($text))
+                        .observe($onclick)
+                        .observe(hover_observer)  
+                        .observe(out_observer)
+                        .observe(pressed_observer)
+                        .observe(super::shared_widgets::focus_in_observer)
+                        .observe(super::shared_widgets::focus_out_observer)
+                        .id()
+                ),*
+            ]
+        }
+    };
 }
 

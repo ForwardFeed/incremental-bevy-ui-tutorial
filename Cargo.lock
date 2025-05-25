@@ -2466,11 +2466,10 @@ dependencies = [
 ]
 
 [[package]]
-name = "increment-4test"
+name = "increment-test"
 version = "0.1.0"
 dependencies = [
  "bevy",
- "bevy_render",
  "leafwing-input-manager",
 ]
 

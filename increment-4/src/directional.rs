@@ -1,12 +1,28 @@
-use bevy::{ecs::{relationship::{RelatedSpawner, Relationship}, spawn::SpawnableList}, input_focus::{directional_navigation::{DirectionalNavigation, DirectionalNavigationMap, DirectionalNavigationPlugin}, InputDispatchPlugin, InputFocus}, math::CompassOctant, prelude::*};
+use bevy::{
+    ecs::{
+        relationship::{
+            RelatedSpawner,
+            Relationship
+        }, spawn::SpawnableList
+    }, input_focus::{
+        directional_navigation::{
+            DirectionalNavigation,
+            DirectionalNavigationMap,
+            DirectionalNavigationPlugin
+        },
+        InputDispatchPlugin,
+        InputFocus
+    },
+    math::CompassOctant,
+    prelude::*
+};
 use leafwing_input_manager::prelude::*;
 
-use crate::{actions::GeneralActions, fake_input::{send_fake_mouse_out, send_fake_mouse_over, send_fake_mouse_press, send_fake_mouse_release}};
+use crate::{actions::GeneralActions, fake_input::{send_fake_mouse_press, send_fake_mouse_release}};
 
 fn controls_directions(
     actions: Single<&ActionState<GeneralActions>>,
     mut directional_navigation: DirectionalNavigation,
-    mut commands: Commands,
 ){
     // If the user is pressing both left and right, or up and down,
     // it should move in neither direction.
@@ -34,20 +50,11 @@ fn controls_directions(
         (-1, 1) => Some(CompassOctant::NorthWest),
         _ => None,
     };
-    // Store the previous entity in case the direction moves
-    let old_entity = directional_navigation.focus.0;
     if let Some(direction) = maybe_direction {
         match directional_navigation.navigate(direction) {
             // In a real game, you would likely want to play a sound or show a visual effect
             // on both successful and unsuccessful navigation attempts
-            Ok(entity) => {
-                // I prefer to center all my reactivity around events
-                // But https://bevyengine.org/examples/ui-user-interface/directional-navigation/
-                // Prefers to use a system dedicated to the focus
-                if let Some(old_entity) = old_entity{
-                    send_fake_mouse_out(old_entity, &mut commands);
-                }
-                send_fake_mouse_over(entity, &mut commands);
+            Ok(_entity) => {
             }
             Err(_e) => {},
         }
@@ -99,6 +106,8 @@ impl<R: Relationship, F: FnOnce(&mut RelatedSpawner<R>)->Vec<Entity> + Send + Sy
     }
 }
 
+
+
 pub struct DirectionalPlugin;
 
 impl Plugin for DirectionalPlugin{
@@ -113,7 +122,6 @@ impl Plugin for DirectionalPlugin{
             // the chain is to be sure than it's always run the direction first and the accept after
             // I do believe it's a small detail
             .add_systems(Update, (controls_directions, controls_accept).chain())
-            
         ;
     }
 }

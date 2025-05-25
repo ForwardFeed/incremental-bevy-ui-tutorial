@@ -11,9 +11,10 @@ mod pause_menu{
     mod settings_menu; 
 }
 mod camera;
-// two new files
+// three new files
 mod directional;
 mod fake_input;
+mod focus;
 
 /// This function main will:
 /// Nagivate through the pause menu using WASD, Enter, and Return keys.
@@ -26,8 +27,10 @@ fn main() {
                 key_bindings::KeybindingsPlugins,
                 pause_menu::pause_menu::PauseMenuPlugin,
                 camera::CameraPlugin,
-                // new plugin
+                // new plugins
                 directional::DirectionalPlugin,
+                focus::FocusPlugin,
+
             )
         )
         .run();
