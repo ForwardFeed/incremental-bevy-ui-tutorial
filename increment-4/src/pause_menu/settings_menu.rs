@@ -1,8 +1,6 @@
-use bevy::{ecs::{relationship::RelatedSpawner, spawn::SpawnWith}, prelude::*};
+use bevy::{ecs::{relationship::RelatedSpawner}, prelude::*};
 
-use crate::state::PauseState;
-
-use super::shared_widgets::{hover_observer, out_observer, pause_menu_button_widget, pressed_observer};
+use crate::{directional::SpawnWithSouthEdges, fn_vertical_row, state::PauseState};
 
 #[derive(Component)]
 pub struct PauseMenuSettingsUITag;
@@ -30,44 +28,29 @@ pub fn spawn_pause_menu_settings(
                         justify_content: JustifyContent::SpaceEvenly,
                         ..Default::default()
                     },
-                    Children::spawn(SpawnWith(spawn_pause_menu_settings_buttons))
+                    // SpawnWithSouthEdges instead of SpawnWith
+                    Children::spawn(SpawnWithSouthEdges(spawn_pause_menu_settings_buttons))
                 )
             ]
         ))
     ;
 }
 
-
-
-fn spawn_pause_menu_settings_buttons(parent: &mut RelatedSpawner<ChildOf>){
-    parent.spawn(pause_menu_button_widget("Keybinds"))
-        .observe(onclick_keybinds)
-        .observe(hover_observer)  
-        .observe(out_observer)
-        .observe(pressed_observer);
-    parent.spawn(pause_menu_button_widget("PlaceHolder"))
-        .observe(onclick_placeholder)
-        .observe(hover_observer)  
-        .observe(out_observer)
-        .observe(pressed_observer);
-    parent.spawn(pause_menu_button_widget("Return"))
-        .observe(onclick_return)
-        .observe(hover_observer)  
-        .observe(out_observer)
-        .observe(pressed_observer);
-}
-
+// It's much more compact, I like it a lot
+// I find that UI related are a perfect fits for macros;
+fn_vertical_row!(spawn_pause_menu_settings_buttons, [
+    ("Keybinds", onclick_keybinds),
+    ("PlaceHolder", onclick_placeholder),
+    ("Return", onclick_return)
+]);
 
 fn onclick_keybinds(_trigger: Trigger<Pointer<Released>>){
     info!("Let's see that functionnality in a future increment.");
 }
 
-
 fn onclick_placeholder(_trigger: Trigger<Pointer<Released>>){
     info!("I haven't set anything about that yet, but who knows, I may need it.");
 }
-
-
 
 fn onclick_return(_trigger: Trigger<Pointer<Released>>, mut next_state: ResMut<NextState<PauseState>>){
     next_state.set(PauseState::PauseMenu);

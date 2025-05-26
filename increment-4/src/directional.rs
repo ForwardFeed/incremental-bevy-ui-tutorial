@@ -20,6 +20,7 @@ use leafwing_input_manager::prelude::*;
 
 use crate::{actions::GeneralActions, fake_input::{send_fake_mouse_press, send_fake_mouse_release}};
 
+// global system that will link the actions to the navigation
 fn controls_directions(
     actions: Single<&ActionState<GeneralActions>>,
     mut directional_navigation: DirectionalNavigation,
@@ -60,13 +61,13 @@ fn controls_directions(
     }
 }
 
-/// Look if the user pressed Enter
+// Look if the user pressed Enter and triggers a click if so
 fn controls_accept(
     actions: Single<&ActionState<GeneralActions>>,
-    directional_navigation: DirectionalNavigation,
+    focus: Res<InputFocus>,
     mut commands: Commands,
 ){
-    let target = match directional_navigation.focus.0 {
+    let target = match focus.0 {
         Some(x) => x,
         None => {
             return;
@@ -89,10 +90,12 @@ fn controls_accept(
 // The reason why this is needed is because
 // in order to use bevy directionnal, you need the entities.
 // But you also need to spawn with the parent.
-// If you don't want to use that, you will to not use any improvement from bevy 0.16
-// If you want other directionnality, you need to make another implementation with another spawnwith.
+// If you don't want to use that, you will have to not use any improvement from bevy 0.16
+// If you want other directionnality, you need to make another implementation with another spawnwith like.
 pub struct SpawnWithSouthEdges<F>(pub F);
 
+// Yeah the signature is scary, but you can just copy and Paste it to make another Implementation without actually 
+// worrying about what it means
 impl<R: Relationship, F: FnOnce(&mut RelatedSpawner<R>)->Vec<Entity> + Send + Sync + 'static> SpawnableList<R>
     for SpawnWithSouthEdges<F>
 {
@@ -130,7 +133,7 @@ impl Plugin for DirectionalPlugin{
 
         app
             .add_plugins((
-                // We need both of these ones.
+                // We need both of these bevy plugins that are not part of the default.
                 InputDispatchPlugin,
                 DirectionalNavigationPlugin
             ))

@@ -11,11 +11,13 @@ mod pause_menu{
     mod settings_menu; 
 }
 mod camera;
+// three new files
+mod directional;
+mod fake_input;
+mod focus;
 
 /// This function main will:
-/// On the pause menu buttons: 
-/// Mouse over / mouse click changes background & border color
-/// Added Box Shadows
+/// Nagivate through the pause menu using WASD and Enter keys.
 fn main() {
     App::new()
         .add_plugins(
@@ -25,6 +27,9 @@ fn main() {
                 key_bindings::KeybindingsPlugins,
                 pause_menu::pause_menu::PauseMenuPlugin,
                 camera::CameraPlugin,
+                // new plugins
+                directional::DirectionalPlugin,
+                focus::FocusPlugin,
             )
         )
         .run();

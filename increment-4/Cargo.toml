@@ -5,4 +5,5 @@ edition = "2024"
 
 [dependencies]
 bevy = { version = "0.16.0", features = ["dynamic_linking"] }
+bevy_render = "0.16.0"
 leafwing-input-manager = "0.17.0"

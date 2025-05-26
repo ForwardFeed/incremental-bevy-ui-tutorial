@@ -3,10 +3,14 @@ use std::time::Duration;
 use bevy::{math::FloatOrd, picking::{backend::HitData, pointer::{Location, PointerId}}, prelude::*};
 use bevy_render::camera::NormalizedRenderTarget;
 
+// I like to simulate a click rather than do some complicated things
+// To activate a part of the UI using the keyboard I just simulate a click
+// It works.
+
 fn default_pointer_location() -> Location {
     Location {
         target: NormalizedRenderTarget::Image(
-            // This requires to add bevy render to the project
+            // This requires to add bevy_render to the project
             bevy_render::camera::ImageRenderTarget {
                 handle: Handle::default(),
                 scale_factor: FloatOrd(1.0),

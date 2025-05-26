@@ -1,19 +1,20 @@
 use bevy::{input_focus::InputFocus, prelude::*};
 
+// InputFocus has the real current, But It won't tell you if it's a new one. 
+// So you have to keep the information somewhere
 #[derive(Debug, Resource, FromWorld)]
-pub struct CurrentFocusEntity(Option<Entity>);
+pub struct PreviousFocusEntity(Option<Entity>);
 
 // Two Custom Events, I hope FocusIn and FocusOut to be in bevy in the future
 #[derive(Copy, Clone, Event)]
 pub struct FocusIn;
-
 #[derive(Copy, Clone, Event)]
 pub struct FocusOut;
 
 // This will link the focus event
 fn trigger_focus_events(
     input_focus: Res<InputFocus>,
-    mut current_focus: ResMut<CurrentFocusEntity>,
+    mut current_focus: ResMut<PreviousFocusEntity>,
     mut commands: Commands,
 ) {
     if let Some(entity) = input_focus.0 {
@@ -38,7 +39,7 @@ impl Plugin for FocusPlugin{
 
         app
             .add_systems(Update, trigger_focus_events)
-            .init_resource::<CurrentFocusEntity>()
+            .init_resource::<PreviousFocusEntity>()
         ;
     }
 }
