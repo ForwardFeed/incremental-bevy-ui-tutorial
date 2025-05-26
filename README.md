@@ -68,5 +68,7 @@ When clicking on the settings button, a new menu appears with.
 
 ## Todo
 
-[ ] Add dev tools
-[ ] Add UI
+- [ ] Dev tools
+- [ ] Texture
+- [ ] Sound Effect
+- [ ] Key Rebinding
