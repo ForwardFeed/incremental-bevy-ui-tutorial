@@ -8,7 +8,7 @@ const COLOR_BG:  Color = Color::srgb(0.20, 0.15, 0.25);
 const COLOR_SHADOW:  Color = Color::srgb(0.08, 0.08, 0.08); */
 const COLOR_OVER:    Color = Color::srgb(0.25, 0.25, 0.25);
 const COLOR_PRESSED: Color = Color::srgb(0.35, 0.75, 0.35);
-
+const COLOR_NONE:    Color = Color::linear_rgba(0.0, 0.0, 0.0, 0.0);
 #[derive(Component)]
 pub struct PauseMenuRebindsUITag;
 
@@ -86,6 +86,7 @@ fn spawn_rebind_rows(parent: &mut RelatedSpawner<ChildOf>, keybinds: InputMap<Ge
         row!("Move Left", GeneralActions::MoveLeft),
         row!("Move Right", GeneralActions::MoveRight),
         row!("Accept", GeneralActions::Accept),
+        return_button(parent)
     ]
 }
 
@@ -108,6 +109,7 @@ fn rebind_row_widget<T: Into<String>, U: Component>(
                     width: Val::Percent(50.),
                     ..Default::default()
                 },
+                Pickable::IGNORE,
                 TextLayout::new_with_justify(JustifyText::Center),
                 Text::new(name.into())
             ),
@@ -116,6 +118,7 @@ fn rebind_row_widget<T: Into<String>, U: Component>(
                     width: Val::Percent(50.),
                     ..Default::default()
                 },
+                Pickable::IGNORE,
                 compo_tag,
                 Text::new(keybind_text)
             )
@@ -124,55 +127,31 @@ fn rebind_row_widget<T: Into<String>, U: Component>(
     )
 }
 
+fn return_button(parent: &mut RelatedSpawner<ChildOf>) -> Entity{
+    parent.spawn((
 
-pub fn hover_in(trigger: Trigger<Pointer<Over>>, q_menu_buttons: Query<(Entity, &mut BackgroundColor), With<RebindRowTag>>){
-    for (entity, mut color) in q_menu_buttons{
-        if trigger.target == entity{
-            *color = COLOR_OVER.into();
-        }  
-    }
+    )).id()
 }
 
-pub fn hover_out(trigger: Trigger<Pointer<Out>>, q_menu_buttons: Query<(Entity, &mut BackgroundColor), With<RebindRowTag>>){
-    for (entity, mut color) in q_menu_buttons{
-        if trigger.target == entity{
-            *color = BackgroundColor(Color::NONE);
-        }  
-    }
+// Yeah I macroed that too because it was taking too much space for me
+macro_rules! fn_observer {
+    ($name:ident, $event_type:ty, $color:expr) => {
+        pub fn $name(trigger: Trigger<$event_type>, q_menu_buttons: Query<(Entity, &mut BackgroundColor), With<RebindRowTag>>){
+            let target = trigger.target();
+            for (entity, mut color) in q_menu_buttons{
+                if target == entity{
+                    *color = $color.into();
+                }  
+            }
+        }
+    };
 }
-
-pub fn focus_in(trigger: Trigger<FocusIn>, q_menu_buttons: Query<(Entity, &mut BackgroundColor), With<RebindRowTag>>){
-    for (entity, mut color) in q_menu_buttons{
-        if trigger.target() == entity{
-            *color = COLOR_OVER.into();
-        }  
-    }
-}
-
-pub fn focus_out(trigger: Trigger<FocusOut>, q_menu_buttons: Query<(Entity, &mut BackgroundColor), With<RebindRowTag>>){
-    for (entity, mut color) in q_menu_buttons{
-        if trigger.target() == entity{
-            *color = BackgroundColor(Color::NONE);
-        }  
-    }
-}
-
-pub fn pressed(trigger: Trigger<Pointer<Pressed>>, q_menu_buttons: Query<(Entity, &mut BackgroundColor), With<RebindRowTag>>){
-    for (entity, mut color) in q_menu_buttons{
-        if trigger.target == entity{
-            *color = COLOR_PRESSED.into();
-        }  
-    }
-}
-
-pub fn released(trigger: Trigger<Pointer<Released>>, q_menu_buttons: Query<(Entity, &mut BackgroundColor), With<RebindRowTag>>){
-    for (entity, mut color) in q_menu_buttons{
-        if trigger.target == entity{
-            *color = COLOR_OVER.into();
-        }  
-    }
-}
-
+fn_observer!(hover_in, Pointer<Over>, COLOR_OVER);
+fn_observer!(hover_out, Pointer<Out>, COLOR_NONE);
+fn_observer!(focus_in, FocusIn, COLOR_OVER);
+fn_observer!(focus_out, FocusOut, COLOR_NONE);
+fn_observer!(pressed, Pointer<Pressed>, COLOR_PRESSED);
+fn_observer!(released, Pointer<Released>, COLOR_OVER);
 
 
 fn convert_keybind_to_text(keybind: Option<Vec<UserInputWrapper>>) -> String{
