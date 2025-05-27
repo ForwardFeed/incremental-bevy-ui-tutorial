@@ -1,7 +1,7 @@
 use bevy::{ecs::{relationship::RelatedSpawner}, prelude::*};
 use leafwing_input_manager::{clashing_inputs::BasicInputs, prelude::*};
 
-use crate::{actions::GeneralActions, directional::SpawnWithSouthEdges, focus::{FocusIn, FocusOut}, state::{PauseState, RebindGeneralActionState}};
+use crate::{actions::GeneralActions, directional::SpawnWithSouthEdges, state::{PauseState, RebindGeneralActionState}};
 
 const COLOR_BG:  Color = Color::srgb(0.20, 0.15, 0.25);
 const COLOR_OVER:    Color = Color::srgb(0.25, 0.25, 0.25);
@@ -58,8 +58,6 @@ fn spawn_rebind_rows(parent: &mut RelatedSpawner<ChildOf>, keybinds: InputMap<Ge
             parent.spawn(rebind_row_widget($text, convert_keybind_to_text(keybinds.get(&$action)), $action))
                 .observe(hover_in)
                 .observe(hover_out)
-                .observe(focus_in)
-                .observe(focus_out)
                 .observe(released)
                 .observe(pressed)
                 .observe(|_trigger: Trigger<Pointer<Released>>,
@@ -182,8 +180,6 @@ macro_rules! fn_observer {
 }
 fn_observer!(hover_in, Pointer<Over>, COLOR_OVER);
 fn_observer!(hover_out, Pointer<Out>, COLOR_NONE);
-fn_observer!(focus_in, FocusIn, COLOR_OVER);
-fn_observer!(focus_out, FocusOut, COLOR_NONE);
 fn_observer!(pressed, Pointer<Pressed>, COLOR_PRESSED);
 fn_observer!(released, Pointer<Released>, COLOR_OVER);
 

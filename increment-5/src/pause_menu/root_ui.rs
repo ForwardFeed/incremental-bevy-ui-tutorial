@@ -1,6 +1,6 @@
 use bevy::{ecs::relationship::RelatedSpawner, prelude::*};
 
-use crate::{directional::SpawnWithSouthEdges, pause_menu::shared_widgets::{focus_in_observer, focus_out_observer}, state::PauseState};
+use crate::{directional::SpawnWithSouthEdges, state::PauseState};
 
 use super::shared_widgets::{hover_observer, out_observer, pause_menu_button_widget, pressed_observer};
 
@@ -47,24 +47,18 @@ fn spawn_pause_menu_root_buttons(parent: &mut RelatedSpawner<ChildOf>) -> Vec<En
             .observe(hover_observer)  
             .observe(out_observer)
             .observe(pressed_observer)
-            .observe(focus_in_observer)
-            .observe(focus_out_observer)
             .id(),
         parent.spawn(pause_menu_button_widget("Settings" ))
             .observe(onclick_settings)
             .observe(hover_observer)  
             .observe(out_observer)
             .observe(pressed_observer)
-            .observe(focus_in_observer)
-            .observe(focus_out_observer)
             .id(),
         parent.spawn(pause_menu_button_widget("Quit"))
             .observe(onclick_quit)
             .observe(hover_observer)  
             .observe(out_observer)
             .observe(pressed_observer)
-            .observe(focus_in_observer)
-            .observe(focus_out_observer)
             .id(),
     ]
 }

@@ -7,8 +7,8 @@ mod key_bindings;
 mod pause_menu{
     pub mod pause_menu;
     mod shared_widgets;
-    mod root_menu;
-    mod settings_menu; 
+    mod root_ui;
+    mod settings_ui; 
 }
 mod camera;
 

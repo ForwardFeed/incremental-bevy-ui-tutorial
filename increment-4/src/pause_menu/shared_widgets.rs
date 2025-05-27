@@ -1,7 +1,5 @@
 use bevy::prelude::*;
 
-use crate::focus::{FocusIn, FocusOut};
-
 #[derive(Component)]
 pub struct MenuButtonTag;
 
@@ -69,23 +67,6 @@ pub fn pressed_observer(trigger: Trigger<Pointer<Pressed>>, q_menu_buttons: Quer
     }
 }
 
-// new event to deal the focus
-pub fn focus_in_observer(trigger: Trigger<FocusIn>, q_menu_buttons: Query<(Entity, &mut BackgroundColor), With<MenuButtonTag>>){
-    for (entity, mut color) in q_menu_buttons{
-        if trigger.target() == entity{
-            *color = COLOR_OVER.into();
-        }  
-    }
-}
-// new event to deal the focus
-pub fn focus_out_observer(trigger: Trigger<FocusOut>, q_menu_buttons: Query<(Entity, &mut BackgroundColor), With<MenuButtonTag>>){
-    for (entity, mut color) in q_menu_buttons{
-        if trigger.target() == entity{
-            *color = COLOR_NORMAL.into();
-        }  
-    }
-}
-
 /// Creates the whole function to generate directionnable pause menu button widget
 /// Bundles it with hover in and out, pressed, focus in and out events
 #[macro_export]
@@ -99,8 +80,6 @@ macro_rules! fn_vertical_row {
                         .observe($crate::pause_menu::shared_widgets::hover_observer)  
                         .observe($crate::pause_menu::shared_widgets::out_observer)
                         .observe($crate::pause_menu::shared_widgets::pressed_observer)
-                        .observe($crate::pause_menu::shared_widgets::focus_in_observer)
-                        .observe($crate::pause_menu::shared_widgets::focus_out_observer)
                         .id()
                 ),*
             ]
