@@ -1,7 +1,7 @@
 use bevy::{ecs::{relationship::RelatedSpawner}, prelude::*};
 use leafwing_input_manager::{clashing_inputs::BasicInputs, prelude::*};
 
-use crate::{actions::GeneralActions, directional::SpawnWithSouthEdges, focus::{FocusIn, FocusOut}};
+use crate::{actions::GeneralActions, directional::SpawnWithSouthEdges, focus::{FocusIn, FocusOut}, state::RebindGeneralActionState};
 
 const COLOR_BG:  Color = Color::srgb(0.20, 0.15, 0.25);
 /* const COLOR_NORMAL:  Color = Color::srgb(0.15, 0.15, 0.15);
@@ -62,13 +62,20 @@ fn spawn_rebind_rows(parent: &mut RelatedSpawner<ChildOf>, keybinds: InputMap<Ge
                 .observe(focus_out)
                 .observe(released)
                 .observe(pressed)
-                .observe(|_trigger: Trigger<Pointer<Released>>, text_query: Query<(&GeneralActions, &mut Text), With<GeneralActions>>|{
+                .observe(|_trigger: Trigger<Pointer<Released>>,
+                text_query: Query<(&GeneralActions, &mut Text), With<GeneralActions>>,
+                current_state: Res<State<RebindGeneralActionState>>,
+                mut next_state: ResMut<NextState<RebindGeneralActionState>>|{
+                    match current_state.get(){
+                        RebindGeneralActionState::None => {},
+                        RebindGeneralActionState::Rebinding(_) => return
+                    }
                     for (comp_action, mut text) in text_query{
                         if *comp_action == $action{
                             **text = "Enter new key".into()
                         }
-                        
                     }
+                    next_state.set(RebindGeneralActionState::Rebinding($action))
                 })
                 .id()
         };
@@ -208,5 +215,53 @@ fn convert_keybind_to_text(keybind: Option<Vec<UserInputWrapper>>) -> String{
         None => {
             format!("")
         },
+    }
+}
+
+fn listen_to_keyboard_new_key(
+    keyboard: Res<ButtonInput<KeyCode>>,
+    current_state: Res<State<RebindGeneralActionState>>,
+    mut next_state: ResMut<NextState<RebindGeneralActionState>>,
+    mut input_map: Single<&mut InputMap<GeneralActions>>,
+    q_text: Query<(&GeneralActions, &mut Text), With<GeneralActions>>
+
+){
+    let keycodes = keyboard.get_just_pressed().map(|x|*x).collect::<Vec<KeyCode>>();
+    if keycodes.len() == 0{
+        return;
+    }
+    let action = match current_state.get() {
+        RebindGeneralActionState::None => return,
+        RebindGeneralActionState::Rebinding(general_actions) => general_actions,
+    };
+    input_map.clear_action(action);
+    if keycodes.len() == 1{
+        // Simple
+        input_map.insert(*action, *keycodes.get(0).unwrap());
+    } else {
+        // Choords
+        input_map.insert(*action, ButtonlikeChord::new(keycodes));
+    }
+    for (q_action, mut text) in q_text{
+        if action == q_action{
+            **text = convert_keybind_to_text(input_map.get(action))
+        }
+    }
+    next_state.set(RebindGeneralActionState::None);
+}
+
+
+pub struct RebindPlugin;
+
+impl Plugin for RebindPlugin{
+    fn build(&self, app: &mut App) {
+        // Start listening to keybinds only if we're not in 
+        // The negation is a bit odd, but I couldn't figure out the other way
+        // in theory I could find a solution using std::mem::discriminant
+        // But that sounds like a whole new can of worms
+        app
+            .add_systems(Update, listen_to_keyboard_new_key.run_if(
+            not(in_state(RebindGeneralActionState::None))))
+        ;
     }
 }
