@@ -12,11 +12,12 @@ pub enum PauseState {
     PauseMenuRebinds,
 }
 
-// new state that dictate when to listen to rebinding
+// New state that dictate when to listen to rebinding and to which action.
 #[derive(States, Default, Debug, Clone, PartialEq, Eq, Hash)]
 pub enum RebindGeneralActionState {
     #[default]
     None,
+    // Stores which action is target to rebind
     Rebinding(GeneralActions)
 }
 

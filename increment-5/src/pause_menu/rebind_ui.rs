@@ -1,14 +1,14 @@
 use bevy::{ecs::{relationship::RelatedSpawner}, prelude::*};
 use leafwing_input_manager::{clashing_inputs::BasicInputs, prelude::*};
 
-use crate::{actions::GeneralActions, directional::SpawnWithSouthEdges, focus::{FocusIn, FocusOut}, state::RebindGeneralActionState};
+use crate::{actions::GeneralActions, directional::SpawnWithSouthEdges, focus::{FocusIn, FocusOut}, state::{PauseState, RebindGeneralActionState}};
 
 const COLOR_BG:  Color = Color::srgb(0.20, 0.15, 0.25);
-/* const COLOR_NORMAL:  Color = Color::srgb(0.15, 0.15, 0.15);
-const COLOR_SHADOW:  Color = Color::srgb(0.08, 0.08, 0.08); */
 const COLOR_OVER:    Color = Color::srgb(0.25, 0.25, 0.25);
 const COLOR_PRESSED: Color = Color::srgb(0.35, 0.75, 0.35);
 const COLOR_NONE:    Color = Color::linear_rgba(0.0, 0.0, 0.0, 0.0);
+const COLOR_RETURN:  Color = Color::srgb(0.75, 0.35, 0.35);
+
 #[derive(Component)]
 pub struct PauseMenuRebindsUITag;
 
@@ -65,14 +65,27 @@ fn spawn_rebind_rows(parent: &mut RelatedSpawner<ChildOf>, keybinds: InputMap<Ge
                 .observe(|_trigger: Trigger<Pointer<Released>>,
                 text_query: Query<(&GeneralActions, &mut Text), With<GeneralActions>>,
                 current_state: Res<State<RebindGeneralActionState>>,
-                mut next_state: ResMut<NextState<RebindGeneralActionState>>|{
-                    match current_state.get(){
-                        RebindGeneralActionState::None => {},
-                        RebindGeneralActionState::Rebinding(_) => return
-                    }
+                mut next_state: ResMut<NextState<RebindGeneralActionState>>,
+                input_map: Single<&InputMap<GeneralActions>>|{
+                    // I check this condition because, you may click on multiple rows
+                    // and then you will have a visual bug.
+                    let prev_missclick =  match current_state.get(){
+                        RebindGeneralActionState::None => None,
+                        RebindGeneralActionState::Rebinding(current_rebinding) => {
+                            Some(current_rebinding)
+                        }
+                    };
                     for (comp_action, mut text) in text_query{
+                        // Tells the user it has to enter a new key
                         if *comp_action == $action{
                             **text = "Enter new key".into()
+                        }
+                        // So in case of a previous user missclick, this will turn back the previous clicked
+                        // rebind ui button into its normal state.
+                        if let Some(prev_missclick) = prev_missclick{
+                            if comp_action == prev_missclick{
+                                **text = convert_keybind_to_text(input_map.get(prev_missclick))
+                            }
                         }
                     }
                     next_state.set(RebindGeneralActionState::Rebinding($action))
@@ -95,10 +108,11 @@ fn rebind_row_widget<T: Into<String>, U: Component>(
     keybind_text: String,
     compo_tag: U
 ) -> impl Bundle{
-
     (
         Node {
             width: Val::Percent(100.),
+            height: Val::Percent(100.),
+            align_items: AlignItems::Center,
             justify_content: JustifyContent::SpaceEvenly,
             ..Default::default()
         },
@@ -109,7 +123,6 @@ fn rebind_row_widget<T: Into<String>, U: Component>(
                     width: Val::Percent(50.),
                     ..Default::default()
                 },
-                Pickable::IGNORE,
                 TextLayout::new_with_justify(JustifyText::Center),
                 Text::new(name.into())
             ),
@@ -118,7 +131,6 @@ fn rebind_row_widget<T: Into<String>, U: Component>(
                     width: Val::Percent(50.),
                     ..Default::default()
                 },
-                Pickable::IGNORE,
                 compo_tag,
                 Text::new(keybind_text)
             )
@@ -127,10 +139,32 @@ fn rebind_row_widget<T: Into<String>, U: Component>(
     )
 }
 
+// a simple return button so I get back to where I was.
 fn return_button(parent: &mut RelatedSpawner<ChildOf>) -> Entity{
     parent.spawn((
-
-    )).id()
+        Node {
+            width: Val::Percent(100.),
+            height: Val::Percent(100.),
+            align_items: AlignItems::Center,
+            justify_content: JustifyContent::SpaceEvenly,
+            ..Default::default()
+        },
+        BackgroundColor(COLOR_RETURN.into()),
+        children![
+            (
+                Node{
+                    width: Val::Percent(100.),
+                    ..Default::default()
+                },
+                TextLayout::new_with_justify(JustifyText::Center),
+                Text::new("Return")
+            )
+        ]
+    ))
+    .observe(|_trigger: Trigger<Pointer<Released>>, mut next_state: ResMut<NextState<PauseState>>|{
+        next_state.set(PauseState::PauseMenuSettings)
+    })
+    .id()
 }
 
 // Yeah I macroed that too because it was taking too much space for me
@@ -153,7 +187,10 @@ fn_observer!(focus_out, FocusOut, COLOR_NONE);
 fn_observer!(pressed, Pointer<Pressed>, COLOR_PRESSED);
 fn_observer!(released, Pointer<Released>, COLOR_OVER);
 
-
+// The way I convert to text is pretty unsure since I use the debug formatting
+// I may expect to improve that in the future.
+// It's especially weird for non-qwerty users as when you press Z with an azerty it shows W
+// Which is confusing, but to solve that one would have to dwelve into winit input handling.
 fn convert_keybind_to_text(keybind: Option<Vec<UserInputWrapper>>) -> String{
     match keybind{
         Some(vec_user_input_wrapper) => {
@@ -205,22 +242,32 @@ fn listen_to_keyboard_new_key(
     q_text: Query<(&GeneralActions, &mut Text), With<GeneralActions>>
 
 ){
+    // retrieve everything that has been just pressed in the last frame.
     let keycodes = keyboard.get_just_pressed().map(|x|*x).collect::<Vec<KeyCode>>();
     if keycodes.len() == 0{
         return;
     }
     let action = match current_state.get() {
-        RebindGeneralActionState::None => return,
+        RebindGeneralActionState::None => {
+            warn!("How did listen_to_keyboard_new_key be callable it that state?????");
+            return;
+        }, 
         RebindGeneralActionState::Rebinding(general_actions) => general_actions,
     };
+    // Remove all previous binds from this action
     input_map.clear_action(action);
     if keycodes.len() == 1{
         // Simple
         input_map.insert(*action, *keycodes.get(0).unwrap());
     } else {
         // Choords
+        // One problem is if you want to introduce a choord.
+        // You have to hit all keys at the same frame.
+        // The solution to that would be to buffer inputs for some frames.
+        // Which is doable yet significantly more difficult
         input_map.insert(*action, ButtonlikeChord::new(keycodes));
     }
+    // Replacing the text in the UI
     for (q_action, mut text) in q_text{
         if action == q_action{
             **text = convert_keybind_to_text(input_map.get(action))
@@ -234,13 +281,12 @@ pub struct RebindPlugin;
 
 impl Plugin for RebindPlugin{
     fn build(&self, app: &mut App) {
-        // Start listening to keybinds only if we're not in 
         // The negation is a bit odd, but I couldn't figure out the other way
         // in theory I could find a solution using std::mem::discriminant
         // But that sounds like a whole new can of worms
         app
-            .add_systems(Update, listen_to_keyboard_new_key.run_if(
-            not(in_state(RebindGeneralActionState::None))))
+            .add_systems(Update, listen_to_keyboard_new_key.
+                run_if(not(in_state(RebindGeneralActionState::None))))
         ;
     }
 }
