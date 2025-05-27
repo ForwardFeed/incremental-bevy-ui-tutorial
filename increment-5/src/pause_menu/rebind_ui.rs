@@ -4,8 +4,8 @@ use leafwing_input_manager::{clashing_inputs::BasicInputs, prelude::*};
 use crate::{actions::GeneralActions, directional::SpawnWithSouthEdges, focus::{FocusIn, FocusOut}};
 
 const COLOR_BG:  Color = Color::srgb(0.20, 0.15, 0.25);
-const COLOR_NORMAL:  Color = Color::srgb(0.15, 0.15, 0.15);
-const COLOR_SHADOW:  Color = Color::srgb(0.08, 0.08, 0.08);
+/* const COLOR_NORMAL:  Color = Color::srgb(0.15, 0.15, 0.15);
+const COLOR_SHADOW:  Color = Color::srgb(0.08, 0.08, 0.08); */
 const COLOR_OVER:    Color = Color::srgb(0.25, 0.25, 0.25);
 const COLOR_PRESSED: Color = Color::srgb(0.35, 0.75, 0.35);
 
@@ -55,13 +55,21 @@ fn spawn_rebind_rows(parent: &mut RelatedSpawner<ChildOf>, keybinds: InputMap<Ge
     // apologies for the macro, it's too convenient
     macro_rules! row {
         ($text:tt, $action:expr) => {
-            parent.spawn(rebind_row_widget($text, convert_keybind_to_text(keybinds.get(&$action))))
+            parent.spawn(rebind_row_widget($text, convert_keybind_to_text(keybinds.get(&$action)), $action))
                 .observe(hover_in)
                 .observe(hover_out)
                 .observe(focus_in)
                 .observe(focus_out)
                 .observe(released)
                 .observe(pressed)
+                .observe(|_trigger: Trigger<Pointer<Released>>, text_query: Query<(&GeneralActions, &mut Text), With<GeneralActions>>|{
+                    for (comp_action, mut text) in text_query{
+                        if *comp_action == $action{
+                            **text = "Enter new key".into()
+                        }
+                        
+                    }
+                })
                 .id()
         };
     }
@@ -74,9 +82,10 @@ fn spawn_rebind_rows(parent: &mut RelatedSpawner<ChildOf>, keybinds: InputMap<Ge
     ]
 }
 
-fn rebind_row_widget<T: Into<String>>(
+fn rebind_row_widget<T: Into<String>, U: Component>(
     name: T, 
-    keybind_text: String
+    keybind_text: String,
+    compo_tag: U
 ) -> impl Bundle{
 
     (
@@ -100,6 +109,7 @@ fn rebind_row_widget<T: Into<String>>(
                     width: Val::Percent(50.),
                     ..Default::default()
                 },
+                compo_tag,
                 Text::new(keybind_text)
             )
         ]

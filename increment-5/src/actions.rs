@@ -6,7 +6,7 @@ pub enum PauseMenuActions {
     Activate,
 }
 
-#[derive(Actionlike, PartialEq, Eq, Hash, Clone, Copy, Debug, Reflect)]
+#[derive(Actionlike, PartialEq, Eq, Hash, Clone, Copy, Debug, Reflect, Component)]
 pub enum GeneralActions {
     MoveUp, 
     MoveDown, 
