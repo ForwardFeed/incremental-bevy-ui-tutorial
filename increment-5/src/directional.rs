@@ -82,8 +82,9 @@ impl<R: Relationship, F: FnOnce(&mut RelatedSpawner<R>)->Vec<Entity> + Send + Sy
     for SpawnWithSouthEdges<F>
 {
     fn spawn(self, world: &mut World, entity: Entity) {
-        world.resource_scope(|world, mut directional_nav_map: Mut<DirectionalNavigationMap>| {
-            world.resource_scope(|world, mut input_focus: Mut<InputFocus>|{
+
+        world.try_resource_scope(|world, mut directional_nav_map: Mut<DirectionalNavigationMap>| {
+            world.try_resource_scope(|world, mut input_focus: Mut<InputFocus>|{
                 world.entity_mut(entity).with_related_entities(|parent : &mut RelatedSpawner<R> |{
                     let entities = self.0(parent);
                     directional_nav_map.add_edges(&entities, CompassOctant::South);

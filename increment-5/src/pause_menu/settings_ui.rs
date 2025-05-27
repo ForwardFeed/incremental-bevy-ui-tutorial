@@ -42,8 +42,9 @@ fn_vertical_row!(spawn_pause_menu_settings_buttons, [
     ("Return", onclick_return)
 ]);
 
-fn onclick_keybinds(_trigger: Trigger<Pointer<Released>>){
-    info!("Let's see that functionnality in a future increment.");
+fn onclick_keybinds(_trigger: Trigger<Pointer<Released>>, mut next_state: ResMut<NextState<PauseState>>){
+    //linked the re rebind menu here
+    next_state.set(PauseState::PauseMenuRebinds);
 }
 
 fn onclick_placeholder(_trigger: Trigger<Pointer<Released>>){

@@ -6,6 +6,8 @@ pub enum PauseState {
     Game,
     PauseMenu,
     PauseMenuSettings,
+    // new state
+    PauseMenuRebinds,
 }
 
 

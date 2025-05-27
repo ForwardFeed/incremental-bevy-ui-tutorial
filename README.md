@@ -63,7 +63,7 @@ When clicking on the settings button, a new menu appears with.
 
 ###### Gamepads not implemented as I don't have a gamepad, but it would be great if someone could improve that part.
 
-
+### Increments-5: *Keyboard rebind menu*
 
 
 ## Todo
