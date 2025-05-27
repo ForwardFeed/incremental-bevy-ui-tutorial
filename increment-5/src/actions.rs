@@ -6,6 +6,7 @@ pub enum PauseMenuActions {
     Activate,
 }
 
+// new! I also use that as a component for the rebind UI.
 #[derive(Actionlike, PartialEq, Eq, Hash, Clone, Copy, Debug, Reflect, Component)]
 pub enum GeneralActions {
     MoveUp, 

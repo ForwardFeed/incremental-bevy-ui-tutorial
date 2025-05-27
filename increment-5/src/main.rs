@@ -17,6 +17,8 @@ mod fake_input;
 mod focus;
 
 /// This function main will:
+/// Have a new rebind menu called "keybinds" in the settings
+/// Where The user will be able to change its keybinds.
 fn main() {
     App::new()
         .add_plugins(
