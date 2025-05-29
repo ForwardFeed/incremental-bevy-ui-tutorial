@@ -54,6 +54,12 @@ fn spawn_pause_menu_root_buttons(parent: &mut RelatedSpawner<ChildOf>) -> Vec<En
             .observe(out_observer)
             .observe(pressed_observer)
             .id(),
+        parent.spawn(pause_menu_button_widget("UI Exposition" ))
+            .observe(onclick_exposition)
+            .observe(hover_observer)  
+            .observe(out_observer)
+            .observe(pressed_observer)
+            .id(),
         parent.spawn(pause_menu_button_widget("Quit"))
             .observe(onclick_quit)
             .observe(hover_observer)  
@@ -69,6 +75,10 @@ fn onclick_resume(_trigger: Trigger<Pointer<Released>>, mut next_state: ResMut<N
 
 fn onclick_settings(_trigger: Trigger<Pointer<Released>>, mut next_state: ResMut<NextState<PauseState>>){
     next_state.set(PauseState::PauseMenuSettings)
+}
+
+fn onclick_exposition(_trigger: Trigger<Pointer<Released>>, mut next_state: ResMut<NextState<PauseState>>){
+    next_state.set(PauseState::PauseMenuExposition)
 }
 
 fn onclick_quit(_trigger: Trigger<Pointer<Released>>, mut exit: EventWriter<AppExit>){

@@ -3,7 +3,7 @@ use leafwing_input_manager::prelude::*;
 
 use crate::{actions::PauseMenuActions, state::PauseState};
 
-use super::{rebind_ui::{spawn_pause_menu_keybinds, PauseMenuRebindsUITag, RebindPlugin}, root_ui::{spawn_pause_menu, PauseMenuUITag}, settings_ui::{spawn_pause_menu_settings, PauseMenuSettingsUITag}};
+use super::{exposition::{spawn_pause_menu_exposition, PauseMenuExpositionUiTag}, rebind_ui::{spawn_pause_menu_keybinds, PauseMenuRebindsUITag, RebindPlugin}, root_ui::{spawn_pause_menu, PauseMenuUITag}, settings_ui::{spawn_pause_menu_settings, PauseMenuSettingsUITag}};
 
 
 pub fn despawn<T: Component>(to_despawn: Query<Entity, With<T>>, mut commands: Commands) {
@@ -21,9 +21,7 @@ fn controls(
         if action.just_pressed(&PauseMenuActions::Activate){
             match current_state.get() {
                 PauseState::Game => next_state.set(PauseState::PauseMenu),
-                PauseState::PauseMenu => next_state.set(PauseState::Game),
-                PauseState::PauseMenuSettings => next_state.set(PauseState::Game),
-                PauseState::PauseMenuRebinds => next_state.set(PauseState::Game),
+                _ => next_state.set(PauseState::Game),
             }
         }
     }
@@ -45,7 +43,10 @@ impl Plugin for PauseMenuPlugin{
 
             .add_systems(OnEnter(PauseState::PauseMenuRebinds), spawn_pause_menu_keybinds)
             .add_systems(OnExit(PauseState::PauseMenuRebinds), despawn::<PauseMenuRebindsUITag>)
-            
+            // new systems
+            .add_systems(OnEnter(PauseState::PauseMenuExposition), spawn_pause_menu_exposition)
+            .add_systems(OnExit(PauseState::PauseMenuExposition), despawn::<PauseMenuExpositionUiTag>)
+
             .add_plugins(RebindPlugin)
         ;
     }

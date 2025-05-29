@@ -9,6 +9,8 @@ pub enum PauseState {
     PauseMenu,
     PauseMenuSettings,
     PauseMenuRebinds,
+    //new state
+    PauseMenuExposition
 }
 
 #[derive(States, Default, Debug, Clone, PartialEq, Eq, Hash)]
