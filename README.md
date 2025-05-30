@@ -19,6 +19,10 @@ Read the whole setup from https://bevyengine.org/learn/quick-start/getting-start
 [leafwing-input-manager](https://github.com/Leafwing-Studios/leafwing-input-manager) will be used for controls because it is likely to be 
 [upstreamed in the future](https://github.com/bevyengine/bevy/issues/435#issuecomment-1254026314)
 
+Actually [bevy_enhanced_input](https://github.com/projectharmonia/bevy_enhanced_input) may be the one to be upstreamed in the future, but I'm making this comment later.
+
+
+
 
 ## Increments 
 
