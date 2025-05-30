@@ -10,7 +10,9 @@ mod pause_menu{
     mod root_ui;
     mod settings_ui; 
     mod rebind_ui;
-    mod exposition_ui;
+    pub mod exposition{
+        pub mod exposition_ui;
+    }
 }
 mod camera;
 mod directional;
