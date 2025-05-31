@@ -252,13 +252,20 @@ fn listen_to_keyboard_new_key(
 }
 
 
+fn on_keybind_listen() -> impl Condition<()> {
+    IntoSystem::into_system(|state: Option<Res<State<RebindGeneralActionState>>>| match state {
+        Some(state) => matches!(**state, RebindGeneralActionState::Rebinding(_)),
+        None => false,
+    })
+}
+
 pub struct RebindPlugin;
 
 impl Plugin for RebindPlugin{
     fn build(&self, app: &mut App) {
         app
             .add_systems(Update, listen_to_keyboard_new_key.
-                run_if(not(in_state(RebindGeneralActionState::None))))
+                run_if(on_keybind_listen()))
         ;
     }
 }

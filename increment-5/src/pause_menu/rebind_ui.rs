@@ -272,17 +272,26 @@ fn listen_to_keyboard_new_key(
     next_state.set(RebindGeneralActionState::None);
 }
 
+// this is a custom Condition
+// So I don't have to write convoluted scheme like
+// run_if(not(in_state(RebindGeneralActionState::None))))
+// (I don't like to write with negation if I can avoid it)
+// + that's a good tool to know about, so I show it for tutorial purpose.
+fn on_keybind_listen() -> impl Condition<()> {
+    IntoSystem::into_system(|state: Option<Res<State<RebindGeneralActionState>>>| match state {
+        Some(state) => matches!(**state, RebindGeneralActionState::Rebinding(_)),
+        None => false,
+    })
+}
+
 
 pub struct RebindPlugin;
 
 impl Plugin for RebindPlugin{
     fn build(&self, app: &mut App) {
-        // The negation is a bit odd, but I couldn't figure out the other way
-        // in theory I could find a solution using std::mem::discriminant
-        // But that sounds like a whole new can of worms
         app
             .add_systems(Update, listen_to_keyboard_new_key.
-                run_if(not(in_state(RebindGeneralActionState::None))))
+                run_if(on_keybind_listen()))
         ;
     }
 }
