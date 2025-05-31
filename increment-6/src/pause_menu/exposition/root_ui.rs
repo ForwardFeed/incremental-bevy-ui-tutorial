@@ -1,17 +1,18 @@
 use bevy::prelude::*;
 
+use super::{align_items_ui::spawn_all_align_items, justify_text_ui::spawn_text_and_border_exposition};
 
-const COLOR_BG:      Color = Color::srgb(0.20, 0.15, 0.25);
-const COLOR_BG_A:    Color = Color::srgb(0.25, 0.15, 0.25);
-const COLOR_BG_B:    Color = Color::srgb(0.20, 0.20, 0.25);
+#[derive(Component)]
+pub struct PauseMenuExpositionUiTag;
+
+pub const COLOR_BG:      Color = Color::srgb(0.20, 0.15, 0.25);
+pub const COLOR_BG_A:    Color = Color::srgb(0.25, 0.15, 0.25);
+pub const COLOR_BG_B:    Color = Color::srgb(0.20, 0.20, 0.25);
 /* const COLOR_OVER:    Color = Color::srgb(0.25, 0.25, 0.25);
 const COLOR_PRESSED: Color = Color::srgb(0.35, 0.75, 0.35);
 const COLOR_NONE:    Color = Color::linear_rgba(0.0, 0.0, 0.0, 0.0);
 const COLOR_RETURN:  Color = Color::srgb(0.75, 0.35, 0.35); */
 
-
-#[derive(Component)]
-pub struct PauseMenuExpositionUiTag;
 
 pub fn spawn_pause_menu_exposition(
     mut commands: Commands,
@@ -37,15 +38,11 @@ pub fn spawn_pause_menu_exposition(
                 },
                 BackgroundColor(COLOR_BG),
                 children![
-                    //spawn_text_and_border_exposition(),
-                    //spawn_all_align_items()
+                    spawn_text_and_border_exposition(),
+                    spawn_all_align_items()
                 ]
             ),
             
         ]
     ));
 }
-
-
-
-

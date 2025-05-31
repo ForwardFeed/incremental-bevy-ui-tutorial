@@ -11,7 +11,10 @@ mod pause_menu{
     mod settings_ui; 
     mod rebind_ui;
     pub mod exposition{
-        pub mod exposition_ui;
+        pub mod exposition;
+        mod root_ui;
+        mod align_items_ui;
+        mod justify_text_ui;
     }
 }
 mod camera;

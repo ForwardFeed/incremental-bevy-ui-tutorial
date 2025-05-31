@@ -1,5 +1,7 @@
 use bevy::prelude::*;
 
+use super::root_ui::{COLOR_BG_A, COLOR_BG_B};
+
 fn align_items_widget<T: Into<String>>(text: T, align: AlignItems)-> impl Bundle{
     (
         Node{
@@ -22,7 +24,7 @@ fn align_items_widget<T: Into<String>>(text: T, align: AlignItems)-> impl Bundle
     )
 }
 
-fn spawn_all_align_items()-> impl Bundle{
+pub fn spawn_all_align_items()-> impl Bundle{
     (
         Node{
             width: Val::Percent(100.),

@@ -1,5 +1,7 @@
 use bevy::prelude::*;
 
+use super::root_ui::COLOR_BG_A;
+
 fn text_widget<T: Into<String>>(text: T, justify_text: JustifyText) -> impl Bundle{
     (
         Node {
@@ -33,7 +35,7 @@ fn border_widget<B: Bundle>(child: B) -> impl Bundle{
     )
 }
 
-fn spawn_text_and_border_exposition() -> impl Bundle{
+pub fn spawn_text_and_border_exposition() -> impl Bundle{
     (
         // You cannot have a UI node without a node.
         Node {
