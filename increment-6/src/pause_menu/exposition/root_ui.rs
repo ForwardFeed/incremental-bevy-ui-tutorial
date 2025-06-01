@@ -1,6 +1,6 @@
 use bevy::{ecs::{relationship::RelatedSpawner, spawn::SpawnWith}, prelude::*};
 
-use super::{align_items_ui::spawn_all_align_items, justify_text_ui::spawn_text_and_border_exposition, sidebar_ui::spawn_sidebar};
+use super::{main_content_ui::spawn_main_content_holder, sidebar_ui::spawn_sidebar};
 
 #[derive(Component)]
 pub struct PauseMenuExpositionUiTag;
@@ -14,7 +14,7 @@ pub const COLOR_BG_B:    Color = Color::srgb(0.20, 0.20, 0.25);
 pub const COLOR_OVER:    Color = Color::srgb(0.25, 0.25, 0.25);
 pub const COLOR_PRESSED: Color = Color::srgb(0.35, 0.75, 0.35);
 pub const COLOR_NONE:    Color = Color::linear_rgba(0.0, 0.0, 0.0, 0.0);
-pub const COLOR_RETURN:  Color = Color::srgb(0.75, 0.35, 0.35);
+//pub const COLOR_RETURN:  Color = Color::srgb(0.75, 0.35, 0.35);
 
 
 pub fn spawn_pause_menu_exposition(
@@ -46,8 +46,6 @@ pub fn spawn_pause_menu_exposition(
                 Children::spawn(SpawnWith(|parent: &mut RelatedSpawner<ChildOf>|{
                     spawn_sidebar(parent);
                     spawn_main_content_holder(parent);
-                    /* spawn_text_and_border_exposition();
-                    spawn_all_align_items(); */
                 }))
             ),
             
@@ -56,15 +54,3 @@ pub fn spawn_pause_menu_exposition(
 }
 
 
-fn spawn_main_content_holder(parent: &mut RelatedSpawner<ChildOf>){
-    parent.spawn(
-        (
-            Node{
-                width: Val::Percent(80.),
-                height: Val::Percent(100.),
-                ..Default::default()
-            },
-            BackgroundColor(COLOR_BG_A)
-        )
-    );
-}

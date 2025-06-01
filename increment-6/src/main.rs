@@ -16,14 +16,17 @@ mod pause_menu{
         mod align_items_ui;
         mod justify_text_ui;
         mod sidebar_ui;
+        mod main_content_ui;
     }
 }
 mod camera;
 mod directional;
 mod fake_input;
 mod focus;
-
+mod ecs;
 /// This function main will:
+/// Show a sub menu called exposition, where I'll expose many stylisation for UI
+/// 
 fn main() {
     App::new()
         .add_plugins(

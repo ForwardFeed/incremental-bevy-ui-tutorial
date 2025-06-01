@@ -35,7 +35,7 @@ fn border_widget<B: Bundle>(child: B) -> impl Bundle{
     )
 }
 
-pub fn spawn_text_and_border_exposition() -> impl Bundle{
+pub fn spawn_justify_text() -> impl Bundle{
     (
         // You cannot have a UI node without a node.
         Node {

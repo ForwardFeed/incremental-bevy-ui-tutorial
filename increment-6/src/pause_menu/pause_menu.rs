@@ -1,16 +1,9 @@
 use bevy::prelude::*;
 use leafwing_input_manager::prelude::*;
 
-use crate::{actions::PauseMenuActions, state::PauseState};
+use crate::{actions::PauseMenuActions, ecs::despawn, state::PauseState};
 
 use super::{exposition::exposition::{ExpositionPlugin}, rebind_ui::{spawn_pause_menu_keybinds, PauseMenuRebindsUITag, RebindPlugin}, root_ui::{spawn_pause_menu, PauseMenuUITag}, settings_ui::{spawn_pause_menu_settings, PauseMenuSettingsUITag}};
-
-
-pub fn despawn<T: Component>(to_despawn: Query<Entity, With<T>>, mut commands: Commands) {
-    for entity in &to_despawn {
-        commands.entity(entity).despawn();
-    }
-}
 
 fn controls(
     query_pause_actions: Query<&ActionState<PauseMenuActions>>,
