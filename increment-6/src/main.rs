@@ -15,6 +15,7 @@ mod pause_menu{
         mod root_ui;
         mod align_items_ui;
         mod justify_text_ui;
+        mod sidebar_ui;
     }
 }
 mod camera;
