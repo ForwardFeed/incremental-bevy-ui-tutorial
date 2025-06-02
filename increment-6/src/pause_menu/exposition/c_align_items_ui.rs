@@ -28,9 +28,9 @@ pub fn spawn_align_items()-> impl Bundle{
 fn align_items_widget<T: Into<String>>(text: T, align: AlignItems)-> impl Bundle{
     (
         Node{
+            flex_direction: FlexDirection::Column,
             align_items: align,
-            width: Val::Percent(100.),
-            height: Val::Px(200.),
+            flex_grow: 1.0,
             border: UiRect::all(Val::Percent(0.5)),
             ..Default::default()
         },
@@ -43,6 +43,12 @@ fn align_items_widget<T: Into<String>>(text: T, align: AlignItems)-> impl Bundle
                 },
                 Text::new(text)
             ),
+            (
+                Node{
+                    ..Default::default()
+                },
+                Text::new("2n item")
+            )
         ]
     )
 }

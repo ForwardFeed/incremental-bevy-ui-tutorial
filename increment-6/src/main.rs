@@ -13,10 +13,11 @@ mod pause_menu{
     pub mod exposition{
         pub mod exposition;
         mod root_ui;
-        mod align_items_ui;
-        mod justify_text_ui;
         mod sidebar_ui;
         mod main_content_ui;
+        // c_ because it's sorted alphabetically, without needing me to make a subfolder
+        mod c_align_items_ui;
+        mod c_justify_text_ui;
     }
 }
 mod camera;

@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::{ecs::{despawn, despawn_children}, pause_menu::exposition::{align_items_ui::spawn_align_items, justify_text_ui::spawn_justify_text, main_content_ui::ExpositionMainContentTag}, state::{ExpositionState, PauseState}};
+use crate::{ecs::{despawn, despawn_children}, pause_menu::exposition::{c_align_items_ui::spawn_align_items, c_justify_text_ui::spawn_justify_text, main_content_ui::ExpositionMainContentTag}, state::{ExpositionState, PauseState}};
 
 use super::root_ui::{spawn_pause_menu_exposition, PauseMenuExpositionUiTag};
 
