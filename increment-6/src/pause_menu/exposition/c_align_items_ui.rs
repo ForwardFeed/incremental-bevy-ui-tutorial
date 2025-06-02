@@ -13,14 +13,14 @@ pub fn spawn_align_items()-> impl Bundle{
         },
         BackgroundColor(COLOR_BG_B),
         children![
-            align_items_widget("AlignItems::Baseline", AlignItems::Baseline),
-            align_items_widget("AlignItems::Center", AlignItems::Center),
+            align_items_widget("AlignItems::Default", AlignItems::Default),
             align_items_widget("AlignItems::Start", AlignItems::Start),
             align_items_widget("AlignItems::End", AlignItems::End),
             align_items_widget("AlignItems::FlexStart", AlignItems::FlexStart),
             align_items_widget("AlignItems::FlexEnd", AlignItems::FlexEnd),
+            align_items_widget("AlignItems::Center", AlignItems::Center),
+            align_items_widget("AlignItems::Baseline", AlignItems::Baseline),
             align_items_widget("AlignItems::Stretch", AlignItems::Stretch),
-            align_items_widget("AlignItems::Default", AlignItems::Default),
         ]
     )
 }
