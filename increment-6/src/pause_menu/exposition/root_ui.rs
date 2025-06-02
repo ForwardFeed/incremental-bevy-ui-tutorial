@@ -42,7 +42,6 @@ pub fn spawn_pause_menu_exposition(
                     },
                     ..Default::default()
                 },
-                BackgroundColor(COLOR_BG),
                 Children::spawn(SpawnWith(|parent: &mut RelatedSpawner<ChildOf>|{
                     spawn_sidebar(parent);
                     spawn_main_content_holder(parent);

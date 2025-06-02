@@ -19,7 +19,6 @@ pub fn spawn_sidebar(parent: &mut RelatedSpawner<ChildOf>){
                 ..Default::default()
                 
             },
-            BackgroundColor(COLOR_BG_B),
             children![
                 (
                     Node{
@@ -64,6 +63,7 @@ pub fn sidebar_buttons_widget<T: Into<String>>(text: T) -> impl Bundle{
             overflow: Overflow::hidden(),
             ..Default::default()
         },
+        BackgroundColor(COLOR_BG_B),
         BorderColor(Color::BLACK),
         BorderRadius{
             top_left: Val::Px(f32::MAX),
@@ -71,12 +71,14 @@ pub fn sidebar_buttons_widget<T: Into<String>>(text: T) -> impl Bundle{
             bottom_left: Val::Px(f32::MAX),
             bottom_right: Val::Px(0.),
         },
+        ExpositionSidebarButtonTag,
         children![
             (
                 Node{
+                    margin: UiRect::all(Val::Px(5.)),
                     ..Default::default()
                 },
-                ExpositionSidebarButtonTag,
+                Pickable::IGNORE,
                 TextLayout::new_with_justify(JustifyText::Center),
                 Text::new(text),
             )
