@@ -3,7 +3,7 @@ use bevy::prelude::*;
 use super::root_ui::COLOR_BG_A;
 
 
-pub fn spawn_justify_text(mut commands: &mut Commands,) -> Entity{
+pub fn spawn_justify_text(commands: &mut Commands,) -> Entity{
     commands.spawn(justify_text()).id()
 }
 

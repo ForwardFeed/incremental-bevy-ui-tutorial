@@ -17,7 +17,7 @@ impl Plugin for ExpositionPlugin{
                     |parent: Single<Entity, With<ExpositionMainContentTag>>, mut commands: Commands|{
                         // I give the commands, so I will be able to spawn observers down the line
                         let child = $func(&mut commands);
-                        //  And then I can add child to the main content parent.
+                        // And then I can add child to the main content parent.
                         commands.entity(*parent).add_child(child);
                     })
                 .add_systems(OnExit(ExpositionState::$state), despawn_children::<ExpositionMainContentTag>)
