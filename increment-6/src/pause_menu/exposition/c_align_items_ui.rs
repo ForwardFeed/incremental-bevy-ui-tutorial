@@ -4,7 +4,11 @@ use super::root_ui::{COLOR_BG_A, COLOR_BG_B};
 
 
 
-pub fn spawn_align_items()-> impl Bundle{
+pub fn spawn_align_items(commands: &mut Commands,) -> Entity{
+    commands.spawn(align_items()).id()
+}
+
+fn align_items() -> impl Bundle {
     (
         Node{
             width: Val::Percent(100.),

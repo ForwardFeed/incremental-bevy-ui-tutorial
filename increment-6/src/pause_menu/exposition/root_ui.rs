@@ -8,7 +8,7 @@ pub struct PauseMenuExpositionUiTag;
 
 
 
-pub const COLOR_BG:      Color = Color::srgb(0.20, 0.15, 0.25);
+//pub const COLOR_BG:      Color = Color::srgb(0.20, 0.15, 0.25);
 pub const COLOR_BG_A:    Color = Color::srgb(0.25, 0.15, 0.25);
 pub const COLOR_BG_B:    Color = Color::srgb(0.20, 0.20, 0.25);
 pub const COLOR_OVER:    Color = Color::srgb(0.25, 0.25, 0.25);

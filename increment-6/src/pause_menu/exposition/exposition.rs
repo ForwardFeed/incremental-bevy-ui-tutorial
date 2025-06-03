@@ -14,14 +14,10 @@ impl Plugin for ExpositionPlugin{
         macro_rules! add_content_side_selectible {
             ($func:ident, $state: ident) => {
                 app.add_systems(OnEnter(ExpositionState::$state),
-                    // Yes you can put closures too, very practical
                     |parent: Single<Entity, With<ExpositionMainContentTag>>, mut commands: Commands|{
-                        // I spawn what is shown as a widget
-                        // I use a widget because it don't plan to make it reactive,
-                        // I may change
-                        let child = commands.spawn($func()).id();
-                        // ExpositionMainContentTag is the compotag I use to mark the place I plan to put 
-                        // the visual content there which I add as a child
+                        // I give the commands, so I will be able to spawn observers down the line
+                        let child = $func(&mut commands);
+                        //  And then I can add child to the main content parent.
                         commands.entity(*parent).add_child(child);
                     })
                 .add_systems(OnExit(ExpositionState::$state), despawn_children::<ExpositionMainContentTag>)
@@ -30,7 +26,6 @@ impl Plugin for ExpositionPlugin{
         app
             .add_systems(OnEnter(PauseState::PauseMenuExposition), spawn_pause_menu_exposition)
             .add_systems(OnExit(PauseState::PauseMenuExposition), despawn::<PauseMenuExpositionUiTag>);
-
         add_content_side_selectible!(spawn_justify_text, JustifyText);
         add_content_side_selectible!(spawn_align_items, AlignItems);
         
