@@ -111,8 +111,3 @@ fn pressed_observer(trigger: Trigger<Pointer<Pressed>>, q_menu_buttons: Query<(E
         }  
     }
 }
-/* fn pressed_observer_world(trigger: Trigger<Pointer<Pressed>>, world: &mut World){
-    if let Some(mut color) = world.get_mut::<BackgroundColor>(trigger.target){
-        *color = COLOR_PRESSED.into();
-    }
-} */
