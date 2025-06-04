@@ -82,4 +82,7 @@ Keyboard only.
 - [x] Key Rebinding
 - [ ] Keybinds Serializing, (alongside saving settings)
 - [ ] Scrolling
-- [ ] Style Museum
+- [x] UI exposition (still needs some working)
+    - [ ] more content
+- [ ] Setting the window name, (probably going to have that before or while saving data)
+- [ ] Conditionnal rendering
