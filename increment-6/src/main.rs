@@ -18,6 +18,7 @@ mod pause_menu{
         // c_ because it's sorted alphabetically, without needing me to make a subfolder
         mod c_align_items_ui;
         mod c_justify_text_ui;
+        mod c_box_shadow_ui;
     }
 }
 mod camera;

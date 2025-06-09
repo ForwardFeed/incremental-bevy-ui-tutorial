@@ -72,7 +72,9 @@ When clicking on the settings button, a new menu appears with.
 Clicking keybinds in the settings now shows a menu where you can click on a keybind to change them.
 Keyboard only.
 
+### Increments-6: *An Exposition of UI bevy components*
 
+Trying to have a visual display of how stuff like Align-Items worked.
 
 ## Todo
 
@@ -86,3 +88,5 @@ Keyboard only.
     - [ ] more content
 - [ ] Setting the window name, (probably going to have that before or while saving data)
 - [ ] Conditionnal rendering
+- [ ] Text Based widgets
+- [ ] Spacial UIs

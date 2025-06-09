@@ -15,6 +15,7 @@ fn justify_text() -> impl Bundle{
             ..Default::default()
         },
         BackgroundColor(COLOR_BG_A),
+        
         children![
             // JustifyText::Left is the default
             border_widget(text_widget("JustifyText::Left", JustifyText::Left, Color::srgb(0.5, 0.0, 0.0))),

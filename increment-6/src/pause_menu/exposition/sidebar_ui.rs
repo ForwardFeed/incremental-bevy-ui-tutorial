@@ -47,6 +47,7 @@ pub fn spawn_all_buttons_sidebar(parent: &mut RelatedSpawner<ChildOf>){
     }
     p_spawn!("text_align", AlignItems);
     p_spawn!("justify_text", JustifyText);
+    p_spawn!("box_shadow", BoxShadow);
 }
 
 pub fn sidebar_buttons_widget<T: Into<String>>(text: T) -> impl Bundle{

@@ -26,7 +26,8 @@ pub enum ExpositionState {
     #[default]
     None,
     AlignItems,
-    JustifyText
+    JustifyText,
+    BoxShadow
 
 }
 
