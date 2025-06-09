@@ -90,3 +90,4 @@ Trying to have a visual display of how stuff like Align-Items worked.
 - [ ] Conditionnal rendering
 - [ ] Text Based widgets
 - [ ] Spacial UIs
+- [ ] Observer events like OnAdd

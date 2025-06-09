@@ -6,8 +6,7 @@ use bevy::color::palettes::css::BLUE;
 #[derive(Component)]
 struct ShadownBoxMarker;
 
-pub fn spawn_box_shadow(commands: &mut Commands,) -> Entity{
-    commands.spawn(
+pub fn box_shadow_ui() -> impl Bundle{
         (
             Node{
                 flex_direction: FlexDirection::Row,
@@ -20,8 +19,6 @@ pub fn spawn_box_shadow(commands: &mut Commands,) -> Entity{
                 boxes_shadow() 
             ]    
         )
-        
-    ).id()
 }
 
 fn boxes_control() -> impl Bundle{

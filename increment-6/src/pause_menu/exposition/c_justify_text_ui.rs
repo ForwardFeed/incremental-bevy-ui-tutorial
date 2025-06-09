@@ -2,12 +2,7 @@ use bevy::prelude::*;
 
 use super::root_ui::COLOR_BG_A;
 
-
-pub fn spawn_justify_text(commands: &mut Commands,) -> Entity{
-    commands.spawn(justify_text()).id()
-}
-
-fn justify_text() -> impl Bundle{
+pub fn justify_text_ui() -> impl Bundle{
     (
         Node {
             flex_direction: FlexDirection::Column,
