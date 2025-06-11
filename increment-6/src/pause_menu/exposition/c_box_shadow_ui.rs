@@ -24,13 +24,14 @@ pub fn box_shadow_ui() -> impl Bundle{
             },
             
             children![
-                boxes_control(),
+                boxes_control_x_y(),
+                boxes_control_spread_blur(),
                 boxes_shadow() 
             ]    
         )
 }
 
-fn boxes_control() -> impl Bundle{
+fn boxes_control_x_y() -> impl Bundle{
     (
         Node{
             width: Val::Percent(100.),
@@ -94,6 +95,77 @@ fn observer_release_control_my(_trigger: Trigger<Pointer<Released>>, q_shadow_bo
             shadow_style.y_offset = match shadow_style.y_offset{
                 Val::Px(y) => {
                     Val::Px(y - S)
+                },
+                _ => { return; }
+            }
+        }
+    }
+}
+
+fn boxes_control_spread_blur() -> impl Bundle{
+    (
+        Node{
+            width: Val::Percent(100.),
+            ..Default::default()
+        },
+        Children::spawn(SpawnWith(|parent: &mut RelatedSpawner<ChildOf>|{
+            common_button!(parent, "+spread 2%", observer_release_control_ps);
+            common_button!(parent, "-spread 2%", observer_release_control_ms);
+            common_button!(parent, "+blur 5px", observer_release_control_pb);
+            common_button!(parent, "-blur 5px", observer_release_control_mb);
+        }))
+    )
+}
+
+fn observer_release_control_ps(_trigger: Trigger<Pointer<Released>>, q_shadow_boxes: Query<&mut BoxShadow, With<ShadownBoxMarker>>){
+    for mut shadow_box in q_shadow_boxes{
+        for shadow_style in shadow_box.iter_mut(){
+            shadow_style.spread_radius = match shadow_style.spread_radius{
+                Val::Percent(s) => {
+                    Val::Percent(s + 2.0)
+                },
+                _ => {
+                    return; 
+                }
+            }
+        }
+    }
+}
+fn observer_release_control_ms(_trigger: Trigger<Pointer<Released>>, q_shadow_boxes: Query<&mut BoxShadow, With<ShadownBoxMarker>>){
+    for mut shadow_box in q_shadow_boxes{
+        for shadow_style in shadow_box.iter_mut(){
+            shadow_style.spread_radius = match shadow_style.spread_radius{
+                Val::Percent(s) => {
+                    Val::Percent(s - 2.0)
+                },
+                _ => { return; }
+            }
+        }
+    }
+}
+fn observer_release_control_pb(_trigger: Trigger<Pointer<Released>>, q_shadow_boxes: Query<&mut BoxShadow, With<ShadownBoxMarker>>){
+    for mut shadow_box in q_shadow_boxes{
+        for shadow_style in shadow_box.iter_mut(){
+            shadow_style.blur_radius = match shadow_style.blur_radius{
+                Val::Px(b) => {
+                    Val::Px(b + S)
+                },
+                _ => {
+                    // If someone changes that to anything but pixels it will simply make this system not doing anything.
+                    return; 
+                }
+            }
+        }
+    }
+}
+fn observer_release_control_mb(_trigger: Trigger<Pointer<Released>>, q_shadow_boxes: Query<&mut BoxShadow, With<ShadownBoxMarker>>){
+    for mut shadow_box in q_shadow_boxes{
+        for shadow_style in shadow_box.iter_mut(){
+            shadow_style.blur_radius = match shadow_style.blur_radius{
+                Val::Px(b) => {
+                    // if this value goes into negative, it will shrink the box
+                    let n_val = b - S;
+                    Val::Px(if n_val >= 0.0 {n_val} else {0.0})
                 },
                 _ => { return; }
             }
