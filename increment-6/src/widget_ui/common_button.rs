@@ -1,12 +1,10 @@
 use bevy::prelude::*;
 
+use crate::theme::{COLOR_NORMAL, COLOR_OVER, COLOR_PRESSED, COLOR_SHADOW};
+
 #[derive(Component)]
 pub struct CommonButtonTag;
 
-const COLOR_NORMAL:  Color = Color::srgb(0.15, 0.15, 0.15);
-const COLOR_SHADOW:  Color = Color::srgb(0.08, 0.08, 0.08);
-const COLOR_OVER:    Color = Color::srgb(0.25, 0.25, 0.25);
-const COLOR_PRESSED: Color = Color::srgb(0.35, 0.75, 0.35);
 
 pub fn common_button_widgets<T: Into<String>>(inner_text: T) -> impl Bundle{
     (

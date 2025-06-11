@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::{ecs::{despawn, despawn_children}, pause_menu::exposition::{c_align_items_ui::align_items_ui, c_box_shadow_ui::box_shadow_ui, c_justify_text_ui::justify_text_ui, main_content_ui::ExpositionMainContentTag}, state::{ExpositionState, PauseState}};
+use crate::{ecs::{despawn, despawn_children}, pause_menu::exposition::{c_align_items_ui::align_items_ui, c_box_shadow_ui::box_shadow_ui, c_grid_ui::grid_ui, c_justify_text_ui::justify_text_ui, main_content_ui::ExpositionMainContentTag}, state::{ExpositionState, PauseState}};
 
 use super::root_ui::{spawn_pause_menu_exposition, PauseMenuExpositionUiTag};
 
@@ -29,6 +29,6 @@ impl Plugin for ExpositionPlugin{
         add_content_side_selectible!(justify_text_ui, JustifyText);
         add_content_side_selectible!(align_items_ui, AlignItems);
         add_content_side_selectible!(box_shadow_ui, BoxShadow);
-        
+        add_content_side_selectible!(grid_ui, Grid);
     }
 }

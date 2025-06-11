@@ -27,8 +27,8 @@ pub enum ExpositionState {
     None,
     AlignItems,
     JustifyText,
-    BoxShadow
-
+    BoxShadow,
+    Grid,
 }
 
 pub struct StatesPlugin;

@@ -3,7 +3,8 @@ use bevy::prelude::*;
 mod state;
 mod actions;
 mod key_bindings;
-
+// because colors were spreaded everywhere
+mod theme;
 mod pause_menu{
     pub mod pause_menu;
     mod root_ui;
@@ -14,10 +15,11 @@ mod pause_menu{
         mod root_ui;
         mod sidebar_ui;
         mod main_content_ui;
-        // c_ because it's sorted alphabetically, without needing me to make a subfolder
+        // c_ because content, it's sorted alphabetically, without needing me to make a subfolder
         mod c_align_items_ui;
         mod c_justify_text_ui;
         mod c_box_shadow_ui;
+        mod c_grid_ui;
     }
 }
 // new mod to put all widgets somewhere

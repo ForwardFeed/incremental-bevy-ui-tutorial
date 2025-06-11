@@ -1,6 +1,7 @@
 use bevy::ecs::relationship::RelatedSpawner;
 use bevy::ecs::spawn::SpawnWith;
 use bevy::prelude::*;
+// bevy has a bunch of named colors, the one you get from css https://developer.mozilla.org/en-US/docs/Web/CSS/named-color
 use bevy::color::palettes::css::RED;
 
 use crate::common_button;
@@ -184,7 +185,8 @@ fn boxes_shadow() -> impl Bundle{
             ..Default::default()
         },
         BoxShadow(vec![]),
-        // If you remove the background color, then you will be surprised to see that the background 
+        // If you remove the background color, 
+        // then you will be surprised to see that the background 
         // will be the shadow (sort of)
         BackgroundColor(RED.into()),
         ShadownBoxMarker,
