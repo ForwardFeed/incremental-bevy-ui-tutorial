@@ -1,14 +1,14 @@
 use bevy::prelude::*;
 
 #[derive(Component)]
-pub struct MenuButtonTag;
+pub struct CommonButtonTag;
 
 const COLOR_NORMAL:  Color = Color::srgb(0.15, 0.15, 0.15);
 const COLOR_SHADOW:  Color = Color::srgb(0.08, 0.08, 0.08);
 const COLOR_OVER:    Color = Color::srgb(0.25, 0.25, 0.25);
 const COLOR_PRESSED: Color = Color::srgb(0.35, 0.75, 0.35);
 
-pub fn common_button_widets<T: Into<String>>(inner_text: T) -> impl Bundle{
+pub fn common_button_widgets<T: Into<String>>(inner_text: T) -> impl Bundle{
     (
         Node {
             width: Val::Percent(100.),
@@ -31,7 +31,7 @@ pub fn common_button_widets<T: Into<String>>(inner_text: T) -> impl Bundle{
         BorderColor(Color::BLACK),
         BorderRadius::MAX,
         Button,
-        MenuButtonTag,
+        CommonButtonTag,
         children![
             (
                 Text(inner_text.into()),
@@ -43,7 +43,7 @@ pub fn common_button_widets<T: Into<String>>(inner_text: T) -> impl Bundle{
 }
 
 
-pub fn hover_observer(trigger: Trigger<Pointer<Over>>, q_menu_buttons: Query<(Entity, &mut BackgroundColor), With<MenuButtonTag>>){
+pub fn hover_observer(trigger: Trigger<Pointer<Over>>, q_menu_buttons: Query<(Entity, &mut BackgroundColor), With<CommonButtonTag>>){
     for (entity, mut color) in q_menu_buttons{
         if trigger.target == entity{
             *color = COLOR_OVER.into();
@@ -51,7 +51,7 @@ pub fn hover_observer(trigger: Trigger<Pointer<Over>>, q_menu_buttons: Query<(En
     }
 }
 
-pub fn out_observer(trigger: Trigger<Pointer<Out>>, q_menu_buttons: Query<(Entity, &mut BackgroundColor), With<MenuButtonTag>>){
+pub fn out_observer(trigger: Trigger<Pointer<Out>>, q_menu_buttons: Query<(Entity, &mut BackgroundColor), With<CommonButtonTag>>){
     for (entity, mut color) in q_menu_buttons{
         if trigger.target == entity{
             *color = COLOR_NORMAL.into();
@@ -59,7 +59,7 @@ pub fn out_observer(trigger: Trigger<Pointer<Out>>, q_menu_buttons: Query<(Entit
     }
 }
 
-pub fn pressed_observer(trigger: Trigger<Pointer<Pressed>>, q_menu_buttons: Query<(Entity, &mut BackgroundColor), With<MenuButtonTag>>){
+pub fn pressed_observer(trigger: Trigger<Pointer<Pressed>>, q_menu_buttons: Query<(Entity, &mut BackgroundColor), With<CommonButtonTag>>){
     for (entity, mut color) in q_menu_buttons{
         if trigger.target == entity{
             *color = COLOR_PRESSED.into();
@@ -68,12 +68,23 @@ pub fn pressed_observer(trigger: Trigger<Pointer<Pressed>>, q_menu_buttons: Quer
 }
 
 #[macro_export]
+macro_rules! common_button {
+    ($parent:ident, $text:tt, $onclick:ident) => {
+        $parent.spawn($crate::widget_ui::common_button::common_button_widgets($text))
+            .observe($onclick)
+            .observe($crate::widget_ui::common_button::hover_observer)  
+            .observe($crate::widget_ui::common_button::out_observer)
+            .observe($crate::widget_ui::common_button::pressed_observer)
+    };
+}
+
+#[macro_export]
 macro_rules! fn_vertical_row_common_buttons {
     ($fn_name:ident, [$(($text:tt, $onclick:ident)),*]) => {
         fn $fn_name(parent: &mut RelatedSpawner<ChildOf>) -> Vec<Entity>{
             vec![
                 $(
-                    parent.spawn($crate::widget_ui::common_button::common_button_widets($text))
+                    parent.spawn($crate::widget_ui::common_button::common_button_widgets($text))
                         .observe($onclick)
                         .observe($crate::widget_ui::common_button::hover_observer)  
                         .observe($crate::widget_ui::common_button::out_observer)
