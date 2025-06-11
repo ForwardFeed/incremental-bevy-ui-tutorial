@@ -74,7 +74,12 @@ Keyboard only.
 
 ### Increments-6: *An Exposition of UI bevy components*
 
-Trying to have a visual display of how stuff like Align-Items worked.
+The last increment, I'll add plenty of things and reorganize the code.
+
+- An UI exposition where I'll toy with precise visual components, if possible giving some controls on it.
+    - align items
+    - justify text
+    - box shadow
 
 ## Todo
 
@@ -88,7 +93,6 @@ Trying to have a visual display of how stuff like Align-Items worked.
     - [ ] more content
 - [ ] Setting the window name, (probably going to have that before or while saving data)
 - [ ] Conditionnal rendering
-- [ ] Text Based widgets
 - [ ] Spacial UIs
 - [ ] Observer events like OnAdd
 - [ ] Adding a theme changer
