@@ -8,7 +8,7 @@ const COLOR_SHADOW:  Color = Color::srgb(0.08, 0.08, 0.08);
 const COLOR_OVER:    Color = Color::srgb(0.25, 0.25, 0.25);
 const COLOR_PRESSED: Color = Color::srgb(0.35, 0.75, 0.35);
 
-pub fn pause_menu_button_widget<T: Into<String>>(inner_text: T) -> impl Bundle{
+pub fn common_button_widets<T: Into<String>>(inner_text: T) -> impl Bundle{
     (
         Node {
             width: Val::Percent(100.),
@@ -68,20 +68,19 @@ pub fn pressed_observer(trigger: Trigger<Pointer<Pressed>>, q_menu_buttons: Quer
 }
 
 #[macro_export]
-macro_rules! fn_vertical_row {
+macro_rules! fn_vertical_row_common_buttons {
     ($fn_name:ident, [$(($text:tt, $onclick:ident)),*]) => {
         fn $fn_name(parent: &mut RelatedSpawner<ChildOf>) -> Vec<Entity>{
             vec![
                 $(
-                    parent.spawn($crate::pause_menu::shared_widgets::pause_menu_button_widget($text))
+                    parent.spawn($crate::widget_ui::common_button::common_button_widets($text))
                         .observe($onclick)
-                        .observe($crate::pause_menu::shared_widgets::hover_observer)  
-                        .observe($crate::pause_menu::shared_widgets::out_observer)
-                        .observe($crate::pause_menu::shared_widgets::pressed_observer)
+                        .observe($crate::widget_ui::common_button::hover_observer)  
+                        .observe($crate::widget_ui::common_button::out_observer)
+                        .observe($crate::widget_ui::common_button::pressed_observer)
                         .id()
                 ),*
             ]
         }
     };
 }
-

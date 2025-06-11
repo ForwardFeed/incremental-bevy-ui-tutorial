@@ -6,7 +6,6 @@ mod key_bindings;
 
 mod pause_menu{
     pub mod pause_menu;
-    mod shared_widgets;
     mod root_ui;
     mod settings_ui; 
     mod rebind_ui;
@@ -20,6 +19,10 @@ mod pause_menu{
         mod c_justify_text_ui;
         mod c_box_shadow_ui;
     }
+}
+// new mod to put all widgets somewhere
+mod widget_ui{
+    pub mod common_button;
 }
 mod camera;
 mod directional;

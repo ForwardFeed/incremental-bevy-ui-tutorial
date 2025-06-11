@@ -1,6 +1,6 @@
 use bevy::{ecs::{relationship::RelatedSpawner}, prelude::*};
 
-use crate::{directional::SpawnWithSouthEdges, fn_vertical_row, state::PauseState};
+use crate::{directional::SpawnWithSouthEdges, fn_vertical_row_common_buttons, state::PauseState};
 
 #[derive(Component)]
 pub struct PauseMenuSettingsUITag;
@@ -36,7 +36,7 @@ pub fn spawn_pause_menu_settings(
 }
 
 
-fn_vertical_row!(spawn_pause_menu_settings_buttons, [
+fn_vertical_row_common_buttons!(spawn_pause_menu_settings_buttons, [
     ("Keybinds", onclick_keybinds),
     ("PlaceHolder", onclick_placeholder),
     ("Return", onclick_return)

@@ -91,3 +91,4 @@ Trying to have a visual display of how stuff like Align-Items worked.
 - [ ] Text Based widgets
 - [ ] Spacial UIs
 - [ ] Observer events like OnAdd
+- [ ] Adding a theme changer

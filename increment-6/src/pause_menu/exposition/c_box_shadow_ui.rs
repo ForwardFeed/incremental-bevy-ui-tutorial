@@ -1,7 +1,7 @@
 use bevy::ecs::relationship::RelatedSpawner;
 use bevy::ecs::spawn::SpawnWith;
 use bevy::prelude::*;
-use bevy::color::palettes::css::BLUE;
+use bevy::color::palettes::css::{BLUE, RED};
 
 #[derive(Component)]
 struct ShadownBoxMarker;
@@ -62,6 +62,7 @@ fn boxes_shadow() -> impl Bundle{
             Val::Px(5.), 
             Val::Px(1.) 
         ),
+        BackgroundColor(RED.into()),
         ShadownBoxMarker,
         children![
             Text::new("azeazeaze")

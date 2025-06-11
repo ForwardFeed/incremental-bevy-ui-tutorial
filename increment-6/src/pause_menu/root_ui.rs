@@ -1,8 +1,6 @@
 use bevy::{ecs::relationship::RelatedSpawner, prelude::*};
 
-use crate::{directional::SpawnWithSouthEdges, state::PauseState};
-
-use super::shared_widgets::{hover_observer, out_observer, pause_menu_button_widget, pressed_observer};
+use crate::{directional::SpawnWithSouthEdges, fn_vertical_row_common_buttons, state::PauseState};
 
 
 #[derive(Component)]
@@ -39,35 +37,12 @@ pub fn spawn_pause_menu(
     );
 }
 
-
-fn spawn_pause_menu_root_buttons(parent: &mut RelatedSpawner<ChildOf>) -> Vec<Entity>{
-    vec![
-        parent.spawn(pause_menu_button_widget("Resume"))
-            .observe(onclick_resume)
-            .observe(hover_observer)  
-            .observe(out_observer)
-            .observe(pressed_observer)
-            .id(),
-        parent.spawn(pause_menu_button_widget("Settings" ))
-            .observe(onclick_settings)
-            .observe(hover_observer)  
-            .observe(out_observer)
-            .observe(pressed_observer)
-            .id(),
-        parent.spawn(pause_menu_button_widget("UI Exposition" ))
-            .observe(onclick_exposition)
-            .observe(hover_observer)  
-            .observe(out_observer)
-            .observe(pressed_observer)
-            .id(),
-        parent.spawn(pause_menu_button_widget("Quit"))
-            .observe(onclick_quit)
-            .observe(hover_observer)  
-            .observe(out_observer)
-            .observe(pressed_observer)
-            .id(),
-    ]
-}
+fn_vertical_row_common_buttons!(spawn_pause_menu_root_buttons, [
+    ("Resume", onclick_resume),
+    ("Settings", onclick_settings),
+    ("UI Exposition", onclick_exposition),
+    ("Quit", onclick_quit)
+]);
 
 fn onclick_resume(_trigger: Trigger<Pointer<Released>>, mut next_state: ResMut<NextState<PauseState>>){
     next_state.set(PauseState::Game)
