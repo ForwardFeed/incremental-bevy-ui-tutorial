@@ -1,13 +1,7 @@
 use bevy::{ecs::{relationship::RelatedSpawner}, prelude::*};
 use leafwing_input_manager::{clashing_inputs::BasicInputs, prelude::*};
 
-use crate::{actions::GeneralActions, directional::SpawnWithSouthEdges, state::{PauseState, RebindGeneralActionState}};
-
-const COLOR_BG:      Color = Color::srgb(0.20, 0.15, 0.25);
-const COLOR_OVER:    Color = Color::srgb(0.25, 0.25, 0.25);
-const COLOR_PRESSED: Color = Color::srgb(0.35, 0.75, 0.35);
-const COLOR_NONE:    Color = Color::linear_rgba(0.0, 0.0, 0.0, 0.0);
-const COLOR_RETURN:  Color = Color::srgb(0.75, 0.35, 0.35);
+use crate::{actions::GeneralActions, directional::SpawnWithSouthEdges, state::{PauseState, RebindGeneralActionState}, theme::{COLOR_BG, COLOR_NONE, COLOR_OVER, COLOR_PRESSED, COLOR_RETURN}};
 
 #[derive(Component)]
 pub struct PauseMenuRebindsUITag;

@@ -1,8 +1,6 @@
 use bevy::{ecs::{relationship::RelatedSpawner, spawn::SpawnWith}, prelude::*};
 
-use crate::state::ExpositionState;
-
-use super::root_ui::{COLOR_BG_B, COLOR_NONE, COLOR_OVER, COLOR_PRESSED};
+use crate::{state::ExpositionState, theme::{COLOR_BG_SOFT, COLOR_NONE, COLOR_OVER, COLOR_PRESSED}};
 
 #[derive(Component)]
 pub struct ExpositionSidebarButtonTag;
@@ -65,7 +63,7 @@ pub fn sidebar_buttons_widget<T: Into<String>>(text: T) -> impl Bundle{
             overflow: Overflow::hidden(),
             ..Default::default()
         },
-        BackgroundColor(COLOR_BG_B),
+        BackgroundColor(COLOR_BG_SOFT),
         BorderColor(Color::BLACK),
         BorderRadius{
             top_left: Val::Px(f32::MAX),

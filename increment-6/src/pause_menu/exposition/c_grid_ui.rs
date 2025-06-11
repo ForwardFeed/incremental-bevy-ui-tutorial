@@ -8,8 +8,11 @@ pub fn grid_ui() -> impl Bundle{
             height: Val::Percent(100.),
             // Absolutely need to say that we want a grid
             display: Display::Grid,
-            grid_template_columns: RepeatedGridTrack::flex(3, 0.5),
-            grid_template_rows: RepeatedGridTrack::flex(3, 1.0),
+            // repetition here is the number of boxes in a row or colum
+            // fr => fraction => https://developer.mozilla.org/en-US/docs/Web/CSS/flex_value
+            // so Far I haven't found fr to be useful, in theory I could do like with css?
+            grid_template_columns: RepeatedGridTrack::flex(3, 1.0),
+            grid_template_rows: RepeatedGridTrack::flex(4, 1.0),
             row_gap: Val::Px(12.0),
             column_gap: Val::Px(12.0),
             ..Default::default()
@@ -31,13 +34,6 @@ fn grid_element_ui(index: i32) -> impl Bundle{
             ..Default::default()
         },
         BorderColor(color_from_index(index as f32, true)),
-        /* BoxShadow::new(
-            color_from_index(index as f32, true),
-            Val::Px(3.0),
-            Val::Px(3.0),
-            Val::Px(6.0),
-            Val::Px(1.0),
-        ), */
         BackgroundColor(color_from_index(index as f32, false)),
         children![
             Text::new(index.to_string())
@@ -52,5 +48,5 @@ fn color_from_index(n: f32, d: bool) -> Color{
     let r = (n * 0.1 % 1.0) - df;
     let g = (n * 0.3 % 1.0) - df;
     let b = (n * 0.6 % 1.0) - df; 
-    return Srgba::new(r, g, b, 1.0).into()
+    return Color::srgb(r, g, b)
 }

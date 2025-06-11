@@ -1,8 +1,6 @@
 use bevy::{ecs::relationship::{RelatedSpawner}, prelude::*};
 
-use crate::state::PauseState;
-
-use super::root_ui::{COLOR_BG_A, COLOR_RETURN, COLOR_RETURN_OVER};
+use crate::{state::PauseState, theme::{COLOR_BG, COLOR_RETURN, COLOR_RETURN_OVER}};
 
 #[derive(Component)]
 pub struct ExpositionMainContentTag;
@@ -21,7 +19,7 @@ pub fn spawn_main_content_holder(parent: &mut RelatedSpawner<ChildOf>){
                 ..Default::default()
             },
             ExpositionMainContentTag,
-            BackgroundColor(COLOR_BG_A),
+            BackgroundColor(COLOR_BG),
         )
     );
     parent.spawn(

@@ -1,7 +1,6 @@
 use bevy::prelude::*;
 
-use super::root_ui::{COLOR_BG_A, COLOR_BG_B};
-
+use crate::theme::{COLOR_BG, COLOR_BG_SOFT};
 
 
 pub fn align_items_ui() -> impl Bundle {
@@ -11,7 +10,7 @@ pub fn align_items_ui() -> impl Bundle {
             flex_direction: FlexDirection::Column,
             ..Default::default()
         },
-        BackgroundColor(COLOR_BG_B),
+        BackgroundColor(COLOR_BG_SOFT),
         children![
             align_items_widget("AlignItems::Default", AlignItems::Default),
             align_items_widget("AlignItems::Start", AlignItems::Start),
@@ -35,7 +34,7 @@ fn align_items_widget<T: Into<String>>(text: T, align: AlignItems)-> impl Bundle
             ..Default::default()
         },
         BorderColor(Color::BLACK),
-        BackgroundColor(COLOR_BG_A),
+        BackgroundColor(COLOR_BG),
         children![
             (
                 Node{

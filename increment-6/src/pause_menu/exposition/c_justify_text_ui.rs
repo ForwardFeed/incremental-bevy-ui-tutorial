@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use super::root_ui::COLOR_BG_A;
+use crate::theme::COLOR_BG;
 
 pub fn justify_text_ui() -> impl Bundle{
     (
@@ -9,7 +9,7 @@ pub fn justify_text_ui() -> impl Bundle{
             flex_grow: 1.0,
             ..Default::default()
         },
-        BackgroundColor(COLOR_BG_A),
+        BackgroundColor(COLOR_BG),
         
         children![
             // JustifyText::Left is the default
