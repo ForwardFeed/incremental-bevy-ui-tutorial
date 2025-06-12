@@ -25,8 +25,8 @@ pub fn grid_ui() -> impl Bundle{
             // repetition here is the number of boxes in a row or colum
             // fr => fraction => https://developer.mozilla.org/en-US/docs/Web/CSS/flex_value
             grid_template_rows: vec![
-                RepeatedGridTrack::flex(1, 0.2), //0.2 means 20% of the space
-                RepeatedGridTrack::flex(1, 1.0)
+                RepeatedGridTrack::flex(1, 0.2), // 0.2 means 20% of the space
+                RepeatedGridTrack::flex(1, 1.0), // but then 1 means to fill the space.
             ],
             ..Default::default()
         },
@@ -88,6 +88,8 @@ fn color_from_index(n: f32, d: bool) -> Color{
 fn grid_control() -> impl Bundle{
     (
         Node{
+            column_gap: Val::Percent(1.),
+            padding: UiRect::all(Val::Percent(2.)),
             ..Default::default()
         },
         Children::spawn(SpawnWith(|parent: &mut RelatedSpawner<ChildOf>|{
