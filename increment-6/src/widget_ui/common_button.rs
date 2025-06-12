@@ -12,8 +12,7 @@ pub fn common_button_widgets<T: Into<String>>(inner_text: T) -> impl Bundle{
             width: Val::Percent(100.),
             height: Val::Percent(100.),
             justify_content: JustifyContent::Center,
-            align_items: AlignItems::Center,           
-            margin: UiRect::top(Val::Px(10.)), 
+            align_items: AlignItems::Center,
             border: UiRect::all(Val::Px(5.0)),
             
             ..Default::default()

@@ -27,6 +27,7 @@ pub fn spawn_pause_menu(
                         height: Val::Percent(30.),
                         flex_direction: FlexDirection::Column,
                         justify_content: JustifyContent::SpaceEvenly,
+                        row_gap: Val::Percent(2.),
                         ..Default::default()
                     },
                     Children::spawn(SpawnWithSouthEdges(spawn_pause_menu_root_buttons))
