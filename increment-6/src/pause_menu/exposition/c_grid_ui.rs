@@ -25,13 +25,15 @@ pub fn grid_ui() -> impl Bundle{
             // repetition here is the number of boxes in a row or colum
             // fr => fraction => https://developer.mozilla.org/en-US/docs/Web/CSS/flex_value
             grid_template_rows: vec![
-                RepeatedGridTrack::flex(1, 0.2), // 0.2 means 20% of the space
-                RepeatedGridTrack::flex(1, 1.0), // but then 1 means to fill the space.
+                RepeatedGridTrack::flex(1, 0.2),
+                RepeatedGridTrack::flex(1, 0.2),
+                RepeatedGridTrack::flex(1, 1.0),
             ],
             ..Default::default()
         },
         children![
-            grid_control(),
+            grid_control_grids(),
+            grid_control_gap(),
             grid_body(),
         ]
     )
@@ -85,7 +87,7 @@ fn color_from_index(n: f32, d: bool) -> Color{
     return Color::srgb(r, g, b)
 }
 
-fn grid_control() -> impl Bundle{
+fn grid_control_grids() -> impl Bundle{
     (
         Node{
             column_gap: Val::Percent(1.),
@@ -139,3 +141,65 @@ fn observer_row_m(_trigger: Trigger<Pointer<Released>>, query: Single<(&mut Node
     }
 }
 
+fn grid_control_gap() -> impl Bundle{
+    (
+        Node{
+            column_gap: Val::Percent(1.),
+            padding: UiRect::all(Val::Percent(2.)),
+            ..Default::default()
+        },
+        Children::spawn(SpawnWith(|parent: &mut RelatedSpawner<ChildOf>|{
+            common_button!(parent, "+2 px col gap", observer_col_gap_p);
+            common_button!(parent, "-2 px col gap", observer_col_gap_m);
+            common_button!(parent, "+2 px row gap", observer_row_gap_p);
+            common_button!(parent, "-2 px row gap", observer_row_gap_m);
+        }))
+    )
+}
+
+
+fn observer_col_gap_p(_trigger: Trigger<Pointer<Released>>, mut node: Single<&mut Node, With<GridMarkerData>>){
+    node.column_gap = match node.column_gap {
+        Val::Px(px)=>{
+            Val::Px(px + 2.0)
+        }
+        _ => {return;}
+    }
+}
+
+fn observer_col_gap_m(_trigger: Trigger<Pointer<Released>>, mut node: Single<&mut Node, With<GridMarkerData>>){
+    node.column_gap = match node.column_gap {
+        Val::Px(px)=>{
+            let new_val = px - 2.0;
+            if new_val > 0.0{
+                Val::Px(new_val)
+            } else {
+                Val::Px(0.0)
+            }
+        }
+        _ => {return;}
+    }
+}
+
+fn observer_row_gap_p(_trigger: Trigger<Pointer<Released>>,  mut node: Single<&mut Node, With<GridMarkerData>>){
+    node.row_gap = match node.row_gap {
+        Val::Px(px)=>{
+            Val::Px(px + 2.0)
+        }
+        _ => {return;}
+    }
+}
+
+fn observer_row_gap_m(_trigger: Trigger<Pointer<Released>>, mut node: Single<&mut Node, With<GridMarkerData>>){
+    node.row_gap = match node.row_gap {
+        Val::Px(px)=>{
+            let new_val = px - 2.0;
+            if new_val > 0.0{
+                Val::Px(new_val)
+            } else {
+                Val::Px(0.0)
+            }
+        }
+        _ => {return;}
+    }
+}
