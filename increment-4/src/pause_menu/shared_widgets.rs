@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 
 #[derive(Component)]
-pub struct MenuButtonTag;
+pub struct MenuButtonMarker;
 
 const COLOR_NORMAL:  Color = Color::srgb(0.15, 0.15, 0.15);
 const COLOR_SHADOW:  Color = Color::srgb(0.08, 0.08, 0.08);
@@ -31,7 +31,7 @@ pub fn pause_menu_button_widget<T: Into<String>>(inner_text: T) -> impl Bundle{
         BorderColor(Color::BLACK),
         BorderRadius::MAX,
         Button,
-        MenuButtonTag,
+        MenuButtonMarker,
         children![
             (
                 Text(inner_text.into()),
@@ -43,7 +43,7 @@ pub fn pause_menu_button_widget<T: Into<String>>(inner_text: T) -> impl Bundle{
 }
 
 
-pub fn hover_observer(trigger: Trigger<Pointer<Over>>, q_menu_buttons: Query<(Entity, &mut BackgroundColor), With<MenuButtonTag>>){
+pub fn hover_observer(trigger: Trigger<Pointer<Over>>, q_menu_buttons: Query<(Entity, &mut BackgroundColor), With<MenuButtonMarker>>){
     for (entity, mut color) in q_menu_buttons{
         if trigger.target == entity{
             *color = COLOR_OVER.into();
@@ -51,7 +51,7 @@ pub fn hover_observer(trigger: Trigger<Pointer<Over>>, q_menu_buttons: Query<(En
     }
 }
 
-pub fn out_observer(trigger: Trigger<Pointer<Out>>, q_menu_buttons: Query<(Entity, &mut BackgroundColor), With<MenuButtonTag>>){
+pub fn out_observer(trigger: Trigger<Pointer<Out>>, q_menu_buttons: Query<(Entity, &mut BackgroundColor), With<MenuButtonMarker>>){
     for (entity, mut color) in q_menu_buttons{
         if trigger.target == entity{
             *color = COLOR_NORMAL.into();
@@ -59,7 +59,7 @@ pub fn out_observer(trigger: Trigger<Pointer<Out>>, q_menu_buttons: Query<(Entit
     }
 }
 
-pub fn pressed_observer(trigger: Trigger<Pointer<Pressed>>, q_menu_buttons: Query<(Entity, &mut BackgroundColor), With<MenuButtonTag>>){
+pub fn pressed_observer(trigger: Trigger<Pointer<Pressed>>, q_menu_buttons: Query<(Entity, &mut BackgroundColor), With<MenuButtonMarker>>){
     for (entity, mut color) in q_menu_buttons{
         if trigger.target == entity{
             *color = COLOR_PRESSED.into();

@@ -3,7 +3,7 @@ use leafwing_input_manager::prelude::*;
 
 use crate::{actions::PauseMenuActions, ecs::despawn, state::PauseState};
 
-use super::{exposition::exposition::{ExpositionPlugin}, rebind_ui::{spawn_pause_menu_keybinds, PauseMenuRebindsUITag, RebindPlugin}, root_ui::{spawn_pause_menu, PauseMenuUITag}, settings_ui::{spawn_pause_menu_settings, PauseMenuSettingsUITag}};
+use super::{exposition::exposition::{ExpositionPlugin}, rebind_ui::{spawn_pause_menu_keybinds, PauseMenuRebindsUIMarker, RebindPlugin}, root_ui::{spawn_pause_menu, PauseMenuUIMarker}, settings_ui::{spawn_pause_menu_settings, PauseMenuSettingsUIMarker}};
 
 fn controls(
     query_pause_actions: Query<&ActionState<PauseMenuActions>>,
@@ -29,13 +29,13 @@ impl Plugin for PauseMenuPlugin{
             .add_systems(Update, controls)
 
             .add_systems(OnEnter(PauseState::PauseMenu), spawn_pause_menu)
-            .add_systems(OnExit(PauseState::PauseMenu), despawn::<PauseMenuUITag>)
+            .add_systems(OnExit(PauseState::PauseMenu), despawn::<PauseMenuUIMarker>)
 
             .add_systems(OnEnter(PauseState::PauseMenuSettings), spawn_pause_menu_settings)
-            .add_systems(OnExit(PauseState::PauseMenuSettings), despawn::<PauseMenuSettingsUITag>)
+            .add_systems(OnExit(PauseState::PauseMenuSettings), despawn::<PauseMenuSettingsUIMarker>)
 
             .add_systems(OnEnter(PauseState::PauseMenuRebinds), spawn_pause_menu_keybinds)
-            .add_systems(OnExit(PauseState::PauseMenuRebinds), despawn::<PauseMenuRebindsUITag>)
+            .add_systems(OnExit(PauseState::PauseMenuRebinds), despawn::<PauseMenuRebindsUIMarker>)
 
             // new plugin
             .add_plugins((RebindPlugin, ExpositionPlugin))

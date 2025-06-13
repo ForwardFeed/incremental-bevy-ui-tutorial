@@ -3,7 +3,7 @@ use bevy::{ecs::{relationship::RelatedSpawner, spawn::SpawnWith}, prelude::*};
 use crate::{state::ExpositionState, theme::{COLOR_BG_SOFT, COLOR_NONE, COLOR_OVER, COLOR_PRESSED}};
 
 #[derive(Component)]
-pub struct ExpositionSidebarButtonTag;
+pub struct ExpositionSidebarButtonMarker;
 
 
 
@@ -71,7 +71,7 @@ pub fn sidebar_buttons_widget<T: Into<String>>(text: T) -> impl Bundle{
             bottom_left: Val::Px(f32::MAX),
             bottom_right: Val::Px(0.),
         },
-        ExpositionSidebarButtonTag,
+        ExpositionSidebarButtonMarker,
         children![
             (
                 Node{
@@ -88,7 +88,7 @@ pub fn sidebar_buttons_widget<T: Into<String>>(text: T) -> impl Bundle{
 }
 
 
-fn hover_in_observer(trigger: Trigger<Pointer<Over>>, q_menu_buttons: Query<(Entity, &mut BackgroundColor), With<ExpositionSidebarButtonTag>>){
+fn hover_in_observer(trigger: Trigger<Pointer<Over>>, q_menu_buttons: Query<(Entity, &mut BackgroundColor), With<ExpositionSidebarButtonMarker>>){
     for (entity, mut color) in q_menu_buttons{
         if trigger.target == entity{
             *color = COLOR_OVER.into();
@@ -96,7 +96,7 @@ fn hover_in_observer(trigger: Trigger<Pointer<Over>>, q_menu_buttons: Query<(Ent
     }
 }
 
-fn hover_out_observer(trigger: Trigger<Pointer<Out>>, q_menu_buttons: Query<(Entity, &mut BackgroundColor), With<ExpositionSidebarButtonTag>>){
+fn hover_out_observer(trigger: Trigger<Pointer<Out>>, q_menu_buttons: Query<(Entity, &mut BackgroundColor), With<ExpositionSidebarButtonMarker>>){
     for (entity, mut color) in q_menu_buttons{
         if trigger.target == entity{
             *color = COLOR_NONE.into();
@@ -104,7 +104,7 @@ fn hover_out_observer(trigger: Trigger<Pointer<Out>>, q_menu_buttons: Query<(Ent
     }
 }
 
-fn pressed_observer(trigger: Trigger<Pointer<Pressed>>, q_menu_buttons: Query<(Entity, &mut BackgroundColor), With<ExpositionSidebarButtonTag>>){
+fn pressed_observer(trigger: Trigger<Pointer<Pressed>>, q_menu_buttons: Query<(Entity, &mut BackgroundColor), With<ExpositionSidebarButtonMarker>>){
     for (entity, mut color) in q_menu_buttons{
         if trigger.target == entity{
             *color = COLOR_PRESSED.into();

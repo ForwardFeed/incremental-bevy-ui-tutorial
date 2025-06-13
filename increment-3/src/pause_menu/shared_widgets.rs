@@ -1,9 +1,9 @@
 use bevy::prelude::*;
 
-// It's import to tag our button we want to stylize
+// It's importance is to mark the button we want to stylize
 // In order not to modify all the button of our app
 #[derive(Component)]
-pub struct MenuButtonTag;
+pub struct MenuButtonMarker;
 
 
 const COLOR_NORMAL:  Color = Color::srgb(0.15, 0.15, 0.15);
@@ -38,8 +38,8 @@ pub fn pause_menu_button_widget<T: Into<String>>(inner_text: T) -> impl Bundle{
         BorderColor(Color::BLACK),
         BorderRadius::MAX,
         Button,
-        // Don't forget our tag for the observers below
-        MenuButtonTag,
+        // Don't forget our marker for the observers below
+        MenuButtonMarker,
         children![
             (
                 Text(inner_text.into()),
@@ -55,8 +55,8 @@ pub fn pause_menu_button_widget<T: Into<String>>(inner_text: T) -> impl Bundle{
 
 
 // Observer Hover, when your mouse goes over it
-pub fn hover_observer(trigger: Trigger<Pointer<Over>>, q_menu_buttons: Query<(Entity, &mut BackgroundColor), With<MenuButtonTag>>){
-    // Iterate all Button tag
+pub fn hover_observer(trigger: Trigger<Pointer<Over>>, q_menu_buttons: Query<(Entity, &mut BackgroundColor), With<MenuButtonMarker>>){
+    // Iterate all Button Marker
     for (entity, mut color) in q_menu_buttons{
         // If the entity is the one that triggered the click event
         if trigger.target == entity{
@@ -67,7 +67,7 @@ pub fn hover_observer(trigger: Trigger<Pointer<Over>>, q_menu_buttons: Query<(En
 }
 
 // Observer Out, when your mouse goes away from it
-pub fn out_observer(trigger: Trigger<Pointer<Out>>, q_menu_buttons: Query<(Entity, &mut BackgroundColor), With<MenuButtonTag>>){
+pub fn out_observer(trigger: Trigger<Pointer<Out>>, q_menu_buttons: Query<(Entity, &mut BackgroundColor), With<MenuButtonMarker>>){
     for (entity, mut color) in q_menu_buttons{
         if trigger.target == entity{
             *color = COLOR_NORMAL.into();
@@ -76,7 +76,7 @@ pub fn out_observer(trigger: Trigger<Pointer<Out>>, q_menu_buttons: Query<(Entit
 }
 
 // Observer Press, when your mouse puts its primary down
-pub fn pressed_observer(trigger: Trigger<Pointer<Pressed>>, q_menu_buttons: Query<(Entity, &mut BackgroundColor), With<MenuButtonTag>>){
+pub fn pressed_observer(trigger: Trigger<Pointer<Pressed>>, q_menu_buttons: Query<(Entity, &mut BackgroundColor), With<MenuButtonMarker>>){
     for (entity, mut color) in q_menu_buttons{
         if trigger.target == entity{
             *color = COLOR_PRESSED.into();
@@ -106,7 +106,7 @@ pub fn pause_button_system(
             &mut BorderColor,
             &mut BorderRadius
         ),
-        (Changed<Interaction>, With<MenuButtonTag>),
+        (Changed<Interaction>, With<MenuButtonMarker>),
     >,
 ) {
     // Checks every button interaction

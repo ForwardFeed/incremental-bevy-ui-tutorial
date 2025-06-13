@@ -4,7 +4,7 @@ use leafwing_input_manager::prelude::*;
 use crate::{actions::PauseMenuActions, state::PauseState};
 
 #[derive(Component)]
-pub struct PauseMenuUITag;
+pub struct PauseMenuUIMarker;
 
 fn spawn_pause_menu(
     mut commands: Commands,
@@ -19,7 +19,7 @@ fn spawn_pause_menu(
                 justify_content: JustifyContent::SpaceEvenly,
                 ..Default::default()
             },
-            PauseMenuUITag,
+            PauseMenuUIMarker,
             children![ 
                 (   // I use a flex wrapper node here for styling purpose
                     Node {
@@ -128,7 +128,7 @@ impl Plugin for PauseMenuPlugin{
         app
             .add_systems(Update, controls)
             .add_systems(OnEnter(PauseState::PauseMenu), spawn_pause_menu)
-            .add_systems(OnExit(PauseState::PauseMenu), despawn::<PauseMenuUITag>)
+            .add_systems(OnExit(PauseState::PauseMenu), despawn::<PauseMenuUIMarker>)
         ;
     }
 }

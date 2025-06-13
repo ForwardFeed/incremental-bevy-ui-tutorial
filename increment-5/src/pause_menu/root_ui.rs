@@ -6,7 +6,7 @@ use super::shared_widgets::{hover_observer, out_observer, pause_menu_button_widg
 
 
 #[derive(Component)]
-pub struct PauseMenuUITag;
+pub struct PauseMenuUIMarker;
 
 pub fn spawn_pause_menu(
     mut commands: Commands,
@@ -21,7 +21,7 @@ pub fn spawn_pause_menu(
                 justify_content: JustifyContent::SpaceEvenly,
                 ..Default::default()
             },
-            PauseMenuUITag,
+            PauseMenuUIMarker,
             children![ 
                 (
                     Node {

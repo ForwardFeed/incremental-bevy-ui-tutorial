@@ -3,7 +3,7 @@ use bevy::{ecs::{relationship::RelatedSpawner, spawn::SpawnWith}, prelude::*};
 use super::{main_content_ui::spawn_main_content_holder, sidebar_ui::spawn_sidebar};
 
 #[derive(Component)]
-pub struct PauseMenuExpositionUiTag;
+pub struct PauseMenuExpositionUiMarker;
 
 
 
@@ -20,7 +20,7 @@ pub fn spawn_pause_menu_exposition(
             height: Val::Percent(100.),
             ..Default::default()
         },
-        PauseMenuExpositionUiTag,
+        PauseMenuExpositionUiMarker,
         children![ 
             (
                 Node {

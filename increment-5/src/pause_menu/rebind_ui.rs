@@ -10,10 +10,10 @@ const COLOR_NONE:    Color = Color::linear_rgba(0.0, 0.0, 0.0, 0.0);
 const COLOR_RETURN:  Color = Color::srgb(0.75, 0.35, 0.35);
 
 #[derive(Component)]
-pub struct PauseMenuRebindsUITag;
+pub struct PauseMenuRebindsUIMarker;
 
 #[derive(Component)]
-pub struct RebindRowTag;
+pub struct RebindRowMarker;
 
 pub fn spawn_pause_menu_keybinds(
     mut commands: Commands,
@@ -30,7 +30,7 @@ pub fn spawn_pause_menu_keybinds(
                 justify_content: JustifyContent::SpaceEvenly,
                 ..Default::default()
             },
-            PauseMenuRebindsUITag,
+            PauseMenuRebindsUIMarker,
             children![ 
                 (
                     Node {
@@ -104,7 +104,7 @@ fn spawn_rebind_rows(parent: &mut RelatedSpawner<ChildOf>, keybinds: InputMap<Ge
 fn rebind_row_widget<T: Into<String>, U: Component>(
     name: T, 
     keybind_text: String,
-    compo_tag: U
+    compo_marker: U
 ) -> impl Bundle{
     (
         Node {
@@ -114,7 +114,7 @@ fn rebind_row_widget<T: Into<String>, U: Component>(
             justify_content: JustifyContent::SpaceEvenly,
             ..Default::default()
         },
-        RebindRowTag,
+        RebindRowMarker,
         children![
             (
                 Node{
@@ -129,7 +129,7 @@ fn rebind_row_widget<T: Into<String>, U: Component>(
                     width: Val::Percent(50.),
                     ..Default::default()
                 },
-                compo_tag,
+                compo_marker,
                 Text::new(keybind_text)
             )
         ]
@@ -168,7 +168,7 @@ fn return_button(parent: &mut RelatedSpawner<ChildOf>) -> Entity{
 // Yeah I macroed that too because it was taking too much space for me
 macro_rules! fn_observer {
     ($name:ident, $event_type:ty, $color:expr) => {
-        pub fn $name(trigger: Trigger<$event_type>, q_menu_buttons: Query<(Entity, &mut BackgroundColor), With<RebindRowTag>>){
+        pub fn $name(trigger: Trigger<$event_type>, q_menu_buttons: Query<(Entity, &mut BackgroundColor), With<RebindRowMarker>>){
             let target = trigger.target();
             for (entity, mut color) in q_menu_buttons{
                 if target == entity{

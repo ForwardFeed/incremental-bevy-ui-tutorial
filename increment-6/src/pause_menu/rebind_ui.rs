@@ -4,10 +4,10 @@ use leafwing_input_manager::{clashing_inputs::BasicInputs, prelude::*};
 use crate::{actions::GeneralActions, directional::SpawnWithSouthEdges, state::{PauseState, RebindGeneralActionState}, theme::{COLOR_BG, COLOR_NONE, COLOR_OVER, COLOR_PRESSED, COLOR_RETURN}};
 
 #[derive(Component)]
-pub struct PauseMenuRebindsUITag;
+pub struct PauseMenuRebindsUIMarker;
 
 #[derive(Component)]
-pub struct RebindRowTag;
+pub struct RebindRowMarker;
 
 pub fn spawn_pause_menu_keybinds(
     mut commands: Commands,
@@ -24,7 +24,7 @@ pub fn spawn_pause_menu_keybinds(
                 justify_content: JustifyContent::SpaceEvenly,
                 ..Default::default()
             },
-            PauseMenuRebindsUITag,
+            PauseMenuRebindsUIMarker,
             children![ 
                 (
                     Node {
@@ -92,7 +92,7 @@ fn spawn_rebind_rows(parent: &mut RelatedSpawner<ChildOf>, keybinds: InputMap<Ge
 fn rebind_row_widget<T: Into<String>, U: Component>(
     name: T, 
     keybind_text: String,
-    compo_tag: U
+    compo_marker: U
 ) -> impl Bundle{
     (
         Node {
@@ -102,7 +102,7 @@ fn rebind_row_widget<T: Into<String>, U: Component>(
             justify_content: JustifyContent::SpaceEvenly,
             ..Default::default()
         },
-        RebindRowTag,
+        RebindRowMarker,
         children![
             (
                 Node{
@@ -117,7 +117,7 @@ fn rebind_row_widget<T: Into<String>, U: Component>(
                     width: Val::Percent(50.),
                     ..Default::default()
                 },
-                compo_tag,
+                compo_marker,
                 Text::new(keybind_text)
             )
         ]
@@ -154,7 +154,7 @@ fn return_button(parent: &mut RelatedSpawner<ChildOf>) -> Entity{
 
 macro_rules! fn_observer {
     ($name:ident, $event_type:ty, $color:expr) => {
-        pub fn $name(trigger: Trigger<$event_type>, q_menu_buttons: Query<(Entity, &mut BackgroundColor), With<RebindRowTag>>){
+        pub fn $name(trigger: Trigger<$event_type>, q_menu_buttons: Query<(Entity, &mut BackgroundColor), With<RebindRowMarker>>){
             let target = trigger.target();
             for (entity, mut color) in q_menu_buttons{
                 if target == entity{

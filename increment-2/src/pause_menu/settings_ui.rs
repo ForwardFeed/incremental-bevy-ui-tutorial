@@ -5,7 +5,7 @@ use crate::state::PauseState;
 use super::shared_widgets::pause_menu_button_widget;
 
 #[derive(Component)]
-pub struct PauseMenuSettingsUITag;
+pub struct PauseMenuSettingsUIMarker;
 
 // Similar to the same spawn function as pause menu
 // a global parent node which then will be populated
@@ -23,7 +23,7 @@ pub fn spawn_pause_menu_settings(
                 justify_content: JustifyContent::SpaceEvenly,
                 ..Default::default()
             },
-            PauseMenuSettingsUITag,
+            PauseMenuSettingsUIMarker,
             children![ 
                 (
                     Node {

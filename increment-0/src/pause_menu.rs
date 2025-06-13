@@ -3,9 +3,11 @@ use leafwing_input_manager::prelude::*;
 
 use crate::{actions::PauseMenuActions, state::PauseState};
 
-/// A component tag, Its only purpose is to allow targetting the entity it's attached to by queries
+/// A Marker for components, 
+/// Its only purpose is to allow targetting the entity it's attached to by queries
+/// Some people may call it a Tag instead (I did previously)
 #[derive(Component)]
-pub struct PauseMenuUITag;
+pub struct PauseMenuUIMarker;
 
 /**
  * There's a common question about if it's better to spawn or to hide.
@@ -32,8 +34,8 @@ fn spawn_pause_menu(
                 justify_content: JustifyContent::SpaceEvenly,
                 ..Default::default()
             },
-            // Here's the component-tag from earlier
-            PauseMenuUITag,
+            // Here's the component marker from earlier
+            PauseMenuUIMarker,
             // This new macro from 0.16 is handy to spawn children
             children![
                 (
@@ -93,7 +95,7 @@ impl Plugin for PauseMenuPlugin{
             // If we enter the pause menu state, the pause menu will show
             .add_systems(OnEnter(PauseState::PauseMenu), spawn_pause_menu)
             // If we exit the pause menu state, the pause menu will be destroyed
-            .add_systems(OnExit(PauseState::PauseMenu), despawn::<PauseMenuUITag>)
+            .add_systems(OnExit(PauseState::PauseMenu), despawn::<PauseMenuUIMarker>)
         ;
     }
 }

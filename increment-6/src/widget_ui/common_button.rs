@@ -3,7 +3,7 @@ use bevy::prelude::*;
 use crate::theme::{COLOR_NORMAL, COLOR_OVER, COLOR_PRESSED, COLOR_SHADOW};
 
 #[derive(Component)]
-pub struct CommonButtonTag;
+pub struct CommonButtonMarker;
 
 
 pub fn common_button_widgets<T: Into<String>>(inner_text: T) -> impl Bundle{
@@ -28,7 +28,7 @@ pub fn common_button_widgets<T: Into<String>>(inner_text: T) -> impl Bundle{
         BorderColor(Color::BLACK),
         BorderRadius::MAX,
         Button,
-        CommonButtonTag,
+        CommonButtonMarker,
         children![
             (
                 Text(inner_text.into()),
@@ -40,7 +40,7 @@ pub fn common_button_widgets<T: Into<String>>(inner_text: T) -> impl Bundle{
 }
 
 
-pub fn hover_observer(trigger: Trigger<Pointer<Over>>, q_menu_buttons: Query<(Entity, &mut BackgroundColor), With<CommonButtonTag>>){
+pub fn hover_observer(trigger: Trigger<Pointer<Over>>, q_menu_buttons: Query<(Entity, &mut BackgroundColor), With<CommonButtonMarker>>){
     for (entity, mut color) in q_menu_buttons{
         if trigger.target == entity{
             *color = COLOR_OVER.into();
@@ -48,7 +48,7 @@ pub fn hover_observer(trigger: Trigger<Pointer<Over>>, q_menu_buttons: Query<(En
     }
 }
 
-pub fn out_observer(trigger: Trigger<Pointer<Out>>, q_menu_buttons: Query<(Entity, &mut BackgroundColor), With<CommonButtonTag>>){
+pub fn out_observer(trigger: Trigger<Pointer<Out>>, q_menu_buttons: Query<(Entity, &mut BackgroundColor), With<CommonButtonMarker>>){
     for (entity, mut color) in q_menu_buttons{
         if trigger.target == entity{
             *color = COLOR_NORMAL.into();
@@ -56,7 +56,7 @@ pub fn out_observer(trigger: Trigger<Pointer<Out>>, q_menu_buttons: Query<(Entit
     }
 }
 
-pub fn pressed_observer(trigger: Trigger<Pointer<Pressed>>, q_menu_buttons: Query<(Entity, &mut BackgroundColor), With<CommonButtonTag>>){
+pub fn pressed_observer(trigger: Trigger<Pointer<Pressed>>, q_menu_buttons: Query<(Entity, &mut BackgroundColor), With<CommonButtonMarker>>){
     for (entity, mut color) in q_menu_buttons{
         if trigger.target == entity{
             *color = COLOR_PRESSED.into();

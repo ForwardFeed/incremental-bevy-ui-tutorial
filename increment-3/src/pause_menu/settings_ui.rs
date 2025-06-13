@@ -5,7 +5,7 @@ use crate::state::PauseState;
 use super::shared_widgets::{hover_observer, out_observer, pause_menu_button_widget, pressed_observer};
 
 #[derive(Component)]
-pub struct PauseMenuSettingsUITag;
+pub struct PauseMenuSettingsUIMarker;
 
 pub fn spawn_pause_menu_settings(
     mut commands: Commands,
@@ -20,7 +20,7 @@ pub fn spawn_pause_menu_settings(
                 justify_content: JustifyContent::SpaceEvenly,
                 ..Default::default()
             },
-            PauseMenuSettingsUITag,
+            PauseMenuSettingsUIMarker,
             children![ 
                 (
                     Node {
