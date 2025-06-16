@@ -18,5 +18,11 @@ opt-level = 3
 # 1: Sharing cache and metadata.
 # 2: If you update, you update all as it could result in very insidious bugs
 bevy = { version = "0.16.1", features = ["dynamic_linking"] }
-bevy_render = "0.16.0"
+# needed to send fake input, to convert focus into pointer<over>.
+bevy_render = "0.16.0" 
 leafwing-input-manager = "0.17.0"
+
+# Things you may want to add or check out.
+
+# Dev Tools
+# https://github.com/jakobhellermann/bevy-inspector-egui

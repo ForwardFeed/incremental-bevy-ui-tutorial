@@ -6,23 +6,6 @@ If you put more boxes than there is space available, the grid will not fold as a
 I haven't digged into it too much, I just think it's better anyway if you want to make something like that to have a very customized widget anyway.
 For example an infinite scrolling that generate elements on the fly, usually with a transition animation, oh also with more liberty on the size element.
 
-Small opinion on the grid: It should be set outside the node. like shadow border for example, because as of right now it's too split and hard to functionnalize.
-
-Look, in node we have all those fields to manipulate for a grid.
-
-- display: Display:Grid
-- grid_template_columns
-- grid_template_rows
-- row_gap
-- column_gap
-
-Why can't we bundle that into a GridStyle {} like with shadow?
-
-I know wwweb consider grid a display, but imo it's wrongly thought, a grid should be a complex widget.
-In web if I ever want to do a grid display, I will not and just do flex divs.  
-I won't bother myself with fractions or other too specific concepts of the grid display. I know it's not performant, but it's not what matters here.
-
-
 ## Button component doesn't seem to be worthwhile to be used.
 
 I forgetted it and it didn't change a thing. I think it's a bit stuck between a lot of different vision. It's supposed to block something with the picking, but I think that part is bugged or something.
