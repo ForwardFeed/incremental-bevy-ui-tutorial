@@ -6,7 +6,7 @@ Each Increment is focused on a single objective but the next increment will star
 
 You're not forced to go throught from 0 to X linearly, you will find in this readme the list of all increments and what they do.
 
-Please note it's an experimental tutoring methodology as I have currently no experience in makes tutorials. Furthermore I have little experience with Bevy, I'm just a newbie that just picked it recently and which uses this project as an excuse to learn the game engine. I tried to stick as much to the views of the current engineers working on the project and tried not to be opionated.
+Please note it's an experimental tutoring methodology as I have currently no experience in doing tutorials. Furthermore I have little experience with Bevy, I'm just a newbie that just picked it recently and which uses this project as an excuse to learn the game engine. I tried to stick as much to the views of the current engineers working on the project and tried not to be opionated.
 
 Correction is welcome using issues or pull requests as I apologize in advance for my poor writing skills or lack of knowledge.
 
