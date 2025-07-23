@@ -40,7 +40,7 @@ if you ever want to have a singleton data, please do yourself a favor and call i
 
 ## systems
 
-Systems are functions which are called by the systems whenever they are scheduled.
+Systems are functions which are called by the runtime whenever they are scheduled.
 They can be (not exhaustive):
 - one shot systems
 - events (with observers)
